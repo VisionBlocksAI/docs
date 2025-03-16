@@ -1,13 +1,13 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "theme": "maple",
+  "name": "Vision Fly AI",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
     "dark": "#15803D"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.png",
   "navigation": {
     "tabs": [
       {
@@ -15,11 +15,7 @@
         "groups": [
           {
             "group": "Get Started",
-            "pages": [
-              "introduction",
-              "quickstart",
-              "development"
-            ]
+            "pages": ["introduction", "quickstart", "development"]
           },
           {
             "group": "Essentials",
@@ -39,18 +35,15 @@
         "groups": [
           {
             "group": "API Documentation",
-            "pages": [
-              "api-reference/introduction"
-            ]
+            "pages": ["api-reference/introduction", "api-reference/parameters"]
+          },
+          {
+            "group": "API Examples",
+            "pages": ["api-reference/examples"]
           },
           {
             "group": "Endpoint Examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
-            ]
+            "pages": ["api-reference/endpoints/get.mdx"]
           }
         ]
       }
@@ -69,15 +62,25 @@
         },
         {
           "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
+          "href": "https://visionfly.ai/blog",
           "icon": "newspaper"
         }
       ]
     }
   },
+
+  "api": {
+    "mdx": {
+      "server": "https:/api.visionfly.ai/",
+      "auth": {
+        "method": "key",
+        "name": "vf-api-key"
+      }
+    }
+  },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/logo/logo-no-background.svg",
+    "dark": "/logo/logo-no-background.svg"
   },
   "navbar": {
     "links": [

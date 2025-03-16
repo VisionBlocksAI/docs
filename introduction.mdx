@@ -1,71 +1,63 @@
 ---
-title: Introduction
-description: "Welcome to the home of your new documentation"
+title: "VisionFly API"
+description: "Developer friendly image processing API"
 ---
 
-<img
-  className="block dark:hidden"
-  src="/images/hero-light.png"
-  alt="Hero Light"
-/>
-<img
-  className="hidden dark:block"
-  src="/images/hero-dark.png"
-  alt="Hero Dark"
-/>
+# VisionFly API
 
-## Setting up
+VisionFly API is a secure, privacy-focused image processing solution that enables developers to transform images without persistent storage. Our API provides powerful image manipulation capabilities through a simple, intuitive URL-based interface.
 
-The first step to world-class documentation is setting up your editing environments.
+## Key Benefits
 
 <CardGroup cols={2}>
-  <Card
-    title="Edit Your Docs"
-    icon="pen-to-square"
-    href="https://mintlify.com/docs/quickstart"
-  >
-    Get your docs set up locally for easy development
+  <Card title="Privacy-First" icon="shield-check">
+    Images processed with VisionFly are never stored permanently on our servers
   </Card>
-  <Card
-    title="Preview Changes"
-    icon="image"
-    href="https://mintlify.com/docs/development"
-  >
-    Preview your changes before you push to make sure they're perfect
+  <Card title="Developer-Friendly" icon="code">
+    Simple, intuitive API designed for developers, with clean documentation
+  </Card>
+  <Card title="Fast Processing" icon="bolt">
+    Optimized for speed with minimal latency and parallel processing
+  </Card>
+  <Card title="Transparent Pricing" icon="money-bill">
+    Clear, predictable pricing with no hidden costs or surprises
   </Card>
 </CardGroup>
 
-## Make it yours
+## Features
 
-Update your docs to your brand and add valuable content for the best user conversion.
+VisionFly API offers a comprehensive set of image transformation options:
 
-<CardGroup cols={2}>
-  <Card
-    title="Customize Style"
-    icon="palette"
-    href="https://mintlify.com/docs/settings/global"
-  >
-    Customize your docs to your company's colors and brands
-  </Card>
-  <Card
-    title="Reference APIs"
-    icon="code"
-    href="https://mintlify.com/docs/api-playground/openapi"
-  >
-    Automatically generate endpoints from an OpenAPI spec
-  </Card>
-  <Card
-    title="Add Components"
-    icon="screwdriver-wrench"
-    href="https://mintlify.com/docs/content/components/accordions"
-  >
-    Build interactive features and designs to guide your users
-  </Card>
-  <Card
-    title="Get Inspiration"
-    icon="stars"
-    href="https://mintlify.com/customers"
-  >
-    Check out our showcase of our favorite documentation
-  </Card>
-</CardGroup>
+- **Resize** - Change image dimensions while maintaining aspect ratio
+- **Format Conversion** - Convert between formats (JPG, PNG, WebP)
+- **Quality Adjustments** - Control compression quality to optimize file size
+- **Cropping** - Precise or smart cropping of images
+- **Visual Adjustments** - Modify brightness, contrast, and saturation
+- **More to Come** - Regular updates with new features based on developer feedback
+
+## Getting Started
+
+To start using VisionFly API, you'll need:
+
+1. An API key (sign up at [dashboard.visionfly.ai](https://dashboard.visionfly.ai))
+2. Understanding of the basic URL structure
+3. Knowledge of available transformation parameters
+
+Continue to the [Quick Start](/api-reference/quick-start) guide to send your first request, or explore our [API Reference](/api-reference/endpoints) for detailed information.
+
+```javascript
+// Example: Resizing an image
+fetch(
+  "https://api.visionfly.ai/v1/transform/w800-h600-webp/example.com/image.jpg",
+  {
+    headers: {
+      "VF-API-Key": "your-api-key",
+    },
+  }
+)
+  .then((response) => response.blob())
+  .then((imageBlob) => {
+    const imageUrl = URL.createObjectURL(imageBlob);
+    document.getElementById("result").src = imageUrl;
+  });
+```

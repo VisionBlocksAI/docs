@@ -1,33 +1,177 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: "API Endpoints"
+description: "Complete reference of VisionFly API endpoints"
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+# API Endpoints
 
-## Welcome
+VisionFly API offers several endpoints for image processing and management. All endpoints require authentication via the `VF-API-Key` header.
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+## Transform Image from URL
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+<ParamField header="VF-API-Key" required>
+  Your VisionFly API key
+</ParamField>
 
-## Authentication
+<Endpoint method="GET" path="/v1/transform/{params}/{source}" />
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+Transform an image from a remote URL according to specified parameters.
+
+### URL Parameters
+
+<ParamField path="params" required>
+  Hyphen-separated transformation parameters (e.g., `w800-h600-webp-q85`)
+</ParamField>
+
+<ParamField path="source" required>
+  URL-encoded image URL (e.g., `example.com/image.jpg`)
+</ParamField>
+
+### Response
+
+Returns the transformed image with appropriate content type header.
+
+### Example Request
+
+```bash
+curl -X GET \
+  'https://api.visionfly.ai/v1/transform/w800-h600-webp/example.com/image.jpg' \
+  -H 'VF-API-Key: your-api-key' \
+  --output processed.webp
+```
+
+<ResponseExample>
+  Binary image data with content-type header set to the output format (e.g.,
+  `image/webp`)
+</ResponseExample>
+
+## Transform Uploaded Image
+
+<ParamField header="VF-API-Key" required>
+  Your VisionFly API key
+</ParamField>
+
+<Endpoint method="POST" path="/v1/transform/{params}" />
+
+Transform an uploaded image according to specified parameters.
+
+### URL Parameters
+
+<ParamField path="params" required>
+  Hyphen-separated transformation parameters (e.g., `w800-h600-webp-q85`)
+</ParamField>
+
+### Request Body
+
+Uses `multipart/form-data` content type with the following fields:
+
+<ParamField body="file" type="file" required>
+  The image file to be processed
+</ParamField>
+
+### Response
+
+Returns the transformed image with appropriate content type header.
+
+### Example Request
+
+```bash
+curl -X POST \
+  'https://api.visionfly.ai/v1/transform/w400-webp-q85' \
+  -H 'VF-API-Key: your-api-key' \
+  -F 'file=@/path/to/image.jpg' \
+  --output processed.webp
+```
+
+<ResponseExample>
+  Binary image data with content-type header set to the output format (e.g.,
+  `image/webp`)
+</ResponseExample>
+
+## Upload Image
+
+<ParamField header="VF-API-Key" required>
+  Your VisionFly API key
+</ParamField>
+
+<Endpoint method="POST" path="/v1/upload" />
+
+Upload an image and store it temporarily on the server. Returns an ID that can be used in subsequent transformation requests.
+
+### Request Body
+
+Uses `multipart/form-data` content type with the following fields:
+
+<ParamField body="file" type="file" required>
+  The image file to be uploaded
+</ParamField>
+
+### Response
+
+Returns a JSON object containing the image ID and URL for transformations.
+
+### Example Request
+
+```bash
+curl -X POST \
+  'https://api.visionfly.ai/v1/upload' \
+  -H 'VF-API-Key: your-api-key' \
+  -F 'file=@/path/to/image.jpg'
+```
+
+<ResponseExample>
+```json
+{
+  "id": "img_a1b2c3d4",
+  "message": "Image uploaded successfully",
+  "transform_url": "/v1/transform/{params}/img_a1b2c3d4"
+}
+```
+</ResponseExample>
+
+## Health Check
+
+<Endpoint method="GET" path="/ping" />
+
+Check if the API is running.
+
+### Response
+
+Returns a simple status message indicating the API is operational.
+
+### Example Request
+
+```bash
+curl -X GET 'https://api.visionfly.ai/ping'
+```
+
+<ResponseExample>
+```json
+{
+  "status": "ok",
+  "message": "VisionFly API is running"
+}
+```
+</ResponseExample>
+
+## Error Responses
+
+All endpoints may return the following error responses:
+
+| Status Code | Description                                        |
+| ----------- | -------------------------------------------------- |
+| 400         | Bad Request - Invalid parameters or file           |
+| 401         | Unauthorized - Missing API key                     |
+| 403         | Forbidden - Invalid API key                        |
+| 404         | Not Found - Source image not found                 |
+| 413         | Payload Too Large - Image exceeds maximum size     |
+| 422         | Unprocessable Entity - Unable to process the image |
+| 500         | Internal Server Error                              |
+
+Example error response:
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+{
+  "error": "Invalid API key"
+}
 ```

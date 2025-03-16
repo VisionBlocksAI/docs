@@ -1,97 +1,155 @@
 ---
-title: 'Quickstart'
-description: 'Start building awesome documentation in under 5 minutes'
+title: "Quick Start"
+description: "Learn how to start using VisionFly API in minutes"
 ---
 
-## Setup your development
+# Quick Start
 
-Learn how to update your docs locally and deploy them to the public.
+This guide will help you make your first API request with VisionFly and understand the basics of our image transformation syntax.
 
-### Edit and preview
+## Authentication
 
-<AccordionGroup>
-  <Accordion icon="github" title="Clone your docs locally">
-    During the onboarding process, we created a repository on your Github with
-    your docs content. You can find this repository on our
-    [dashboard](https://dashboard.mintlify.com). To clone the repository
-    locally, follow these
-    [instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
-    in your terminal.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Preview changes">
-    Previewing helps you make sure your changes look as intended. We built a
-    command line interface to render these changes locally. 
-    1. Install the
-    [Mintlify CLI](https://www.npmjs.com/package/mintlify) to preview the
-    documentation changes locally with this command: ``` npm i -g mintlify ```
-    2. Run the following command at the root of your documentation (where
-    `docs.json` is): ``` mintlify dev ```
-    <Note>
-      If you’re currently using the legacy ```mint.json``` configuration file, please update the Mintlify CLI:
+All requests to VisionFly API require an API key, which should be included in the `VF-API-Key` header.
 
+```bash
+VF-API-Key: your-api-key
+```
 
-      ```npm i -g mintlify@latest```
-      And run the new upgrade command in your docs repository:
+<Note>
+  Keep your API key secure. Don't expose it in client-side code. Make API calls
+  from your server when possible.
+</Note>
 
-      ```mintlify upgrade```
-      You should now be using the new ```docs.json``` configuration file. Feel free to delete the ```mint.json``` file from your repository.
-    </Note>
-  </Accordion>
-</AccordionGroup>
+## Basic URL Structure
 
-### Deploy your changes
+VisionFly API uses a simple URL structure for transformations:
 
-<AccordionGroup>
+```
+https://api.visionfly.ai/v1/transform/{params}/{source}
+```
 
-<Accordion icon="message-bot" title="Install our Github app">
-  Our Github app automatically deploys your changes to your docs site, so you
-  don't need to manage deployments yourself. You can find the link to install on
-  your [dashboard](https://dashboard.mintlify.com). Once the bot has been
-  successfully installed, there should be a check mark next to the commit hash
-  of the repo.
-</Accordion>
-<Accordion icon="rocket" title="Push your changes">
-  [Commit and push your changes to
-  Git](https://docs.github.com/en/get-started/using-git/pushing-commits-to-a-remote-repository#about-git-push)
-  for your changes to update in your docs site. If you push and don't see that
-  the Github app successfully deployed your changes, you can also manually
-  update your docs through our [dashboard](https://dashboard.mintlify.com).
-</Accordion>
+Where:
 
-</AccordionGroup>
+- `{params}` are hyphen-separated transformation parameters
+- `{source}` is a URL-encoded image URL
 
-## Update your docs
+## Your First API Request
 
-Add content directly in your files with MDX syntax and React components. You can use any of our components, or even build your own.
+Let's create a simple request to resize an image:
 
-<CardGroup>
+<CodeGroup>
+```javascript JavaScript
+fetch('https://api.visionfly.ai/v1/transform/w800-h600-webp/example.com/image.jpg', {
+  headers: {
+    'VF-API-Key': 'your-api-key'
+  }
+})
+.then(response => response.blob())
+.then(imageBlob => {
+  const imageUrl = URL.createObjectURL(imageBlob);
+  document.getElementById('result').src = imageUrl;
+});
+```
 
-<Card title="Add Content With MDX" icon="file" href="/essentials/markdown">
-  Add content to your docs with MDX syntax.
-</Card>
+```python Python
+import requests
 
-<Card
-  title="Add Code Blocks"
-  icon="square-code"
-  href="/essentials/code"
->
-  Add code directly to your docs with syntax highlighting.
-</Card>
+response = requests.get(
+    'https://api.visionfly.ai/v1/transform/w800-h600-webp/example.com/image.jpg',
+    headers={'VF-API-Key': 'your-api-key'}
+)
 
-<Card
-  title="Add Images"
-  icon="image"
-  href="/essentials/images"
->
-  Add images to your docs to make them more engaging.
-</Card>
+# Save the processed image
+with open('processed.webp', 'wb') as f:
+    f.write(response.content)
+```
 
-<Card
-  title="Add Custom Components"
-  icon="puzzle-piece"
-  href="/essentials/reusable-snippets"
->
-  Add templates to your docs to make them more reusable.
-</Card>
+```curl cURL
+curl -X GET \
+  'https://api.visionfly.ai/v1/transform/w800-h600-webp/example.com/image.jpg' \
+  -H 'VF-API-Key: your-api-key' \
+  --output processed.webp
+```
 
+</CodeGroup>
+
+This request:
+
+1. Targets an image at `example.com/image.jpg`
+2. Resizes it to 800×600 pixels
+3. Converts it to WebP format
+
+## Uploading an Image
+
+If you need to transform your own image instead of a remote URL:
+
+<CodeGroup>
+```javascript JavaScript
+const fileInput = document.getElementById('fileInput');
+const file = fileInput.files[0];
+
+const formData = new FormData();
+formData.append('file', file);
+
+fetch('https://api.visionfly.ai/v1/transform/w400-webp-q85', {
+method: 'POST',
+headers: {
+'VF-API-Key': 'your-api-key'
+},
+body: formData
+})
+.then(response => response.blob())
+.then(imageBlob => {
+const imageUrl = URL.createObjectURL(imageBlob);
+document.getElementById('result').src = imageUrl;
+});
+
+````
+
+```python Python
+import requests
+
+with open('image.jpg', 'rb') as f:
+    response = requests.post(
+        'https://api.visionfly.ai/v1/transform/w400-webp-q85',
+        headers={'VF-API-Key': 'your-api-key'},
+        files={'file': f}
+    )
+
+# Save the processed image
+with open('processed.webp', 'wb') as f:
+    f.write(response.content)
+````
+
+```curl cURL
+curl -X POST \
+  'https://api.visionfly.ai/v1/transform/w400-webp-q85' \
+  -H 'VF-API-Key: your-api-key' \
+  -F 'file=@/path/to/image.jpg' \
+  --output processed.webp
+```
+
+</CodeGroup>
+
+## Next Steps
+
+Now that you've made your first request, explore these resources to learn more:
+
+<CardGroup cols={2}>
+  <Card title="API Reference" icon="book" href="/api-reference/endpoints">
+    Detailed documentation of all endpoints and parameters
+  </Card>
+  <Card
+    title="Transformation Parameters"
+    icon="sliders"
+    href="/api-reference/parameters"
+  >
+    Learn about all available image transformations
+  </Card>
+  <Card title="Examples" icon="code" href="/api-reference/examples">
+    Common use cases and code samples
+  </Card>
+  <Card title="Best Practices" icon="star" href="/api-reference/best-practices">
+    Tips to optimize your image processing
+  </Card>
 </CardGroup>

@@ -1,0 +1,346 @@
+---
+title: "Examples"
+description: "Complete reference of VisionFly API examples"
+---
+
+# Examples
+
+This page provides practical examples of VisionFly API usage for common scenarios.
+
+## Basic Image Resizing
+
+Resize an image to specific dimensions while maintaining the aspect ratio.
+
+### JavaScript
+
+```javascript
+// Resize to width=800px, maintaining aspect ratio
+fetch("https://api.visionfly.ai/v1/transform/w800/example.com/image.jpg", {
+  headers: {
+    "VF-API-Key": "your-api-key",
+  },
+})
+  .then((response) => response.blob())
+  .then((imageBlob) => {
+    const imageUrl = URL.createObjectURL(imageBlob);
+    document.getElementById("result").src = imageUrl;
+  });
+```
+
+### Python
+
+```python
+import requests
+
+# Resize to width=800px, maintaining aspect ratio
+response = requests.get(
+    'https://api.visionfly.ai/v1/transform/w800/example.com/image.jpg',
+    headers={'VF-API-Key': 'your-api-key'}
+)
+
+with open('resized.jpg', 'wb') as f:
+    f.write(response.content)
+```
+
+## Format Conversion and Optimization
+
+Convert images between formats and optimize for web with quality settings.
+
+### JavaScript
+
+```javascript
+// Convert to WebP with 85% quality
+fetch("https://api.visionfly.ai/v1/transform/webp-q85/example.com/image.jpg", {
+  headers: {
+    "VF-API-Key": "your-api-key",
+  },
+})
+  .then((response) => response.blob())
+  .then((imageBlob) => {
+    const imageUrl = URL.createObjectURL(imageBlob);
+    document.getElementById("result").src = imageUrl;
+  });
+```
+
+### Python
+
+```python
+import requests
+
+# Convert to WebP with 85% quality
+response = requests.get(
+    'https://api.visionfly.ai/v1/transform/webp-q85/example.com/image.jpg',
+    headers={'VF-API-Key': 'your-api-key'}
+)
+
+with open('converted.webp', 'wb') as f:
+    f.write(response.content)
+```
+
+## Visual Adjustments
+
+Modify brightness, contrast, and saturation of images.
+
+### JavaScript
+
+```javascript
+// Increase brightness by 20%, increase contrast by 10%, decrease saturation by 10%
+fetch(
+  "https://api.visionfly.ai/v1/transform/bri1.2-con1.1-sat0.9/example.com/image.jpg",
+  {
+    headers: {
+      "VF-API-Key": "your-api-key",
+    },
+  }
+)
+  .then((response) => response.blob())
+  .then((imageBlob) => {
+    const imageUrl = URL.createObjectURL(imageBlob);
+    document.getElementById("result").src = imageUrl;
+  });
+```
+
+### Python
+
+```python
+import requests
+
+# Increase brightness by 20%, increase contrast by 10%, decrease saturation by 10%
+response = requests.get(
+    'https://api.visionfly.ai/v1/transform/bri1.2-con1.1-sat0.9/example.com/image.jpg',
+    headers={'VF-API-Key': 'your-api-key'}
+)
+
+with open('adjusted.jpg', 'wb') as f:
+    f.write(response.content)
+```
+
+## Precise Cropping
+
+Crop specific regions of an image using exact coordinates.
+
+### JavaScript
+
+```javascript
+// Crop from position (50,100) with width=400, height=300
+fetch(
+  "https://api.visionfly.ai/v1/transform/crop50,100,400,300/example.com/image.jpg",
+  {
+    headers: {
+      "VF-API-Key": "your-api-key",
+    },
+  }
+)
+  .then((response) => response.blob())
+  .then((imageBlob) => {
+    const imageUrl = URL.createObjectURL(imageBlob);
+    document.getElementById("result").src = imageUrl;
+  });
+
+// Alternative bracket syntax
+fetch(
+  "https://api.visionfly.ai/v1/transform/crop[50,100,400,300]/example.com/image.jpg",
+  {
+    headers: {
+      "VF-API-Key": "your-api-key",
+    },
+  }
+)
+  .then((response) => response.blob())
+  .then((imageBlob) => {
+    const imageUrl = URL.createObjectURL(imageBlob);
+    document.getElementById("result").src = imageUrl;
+  });
+```
+
+### Python
+
+```python
+import requests
+
+# Crop from position (50,100) with width=400, height=300
+response = requests.get(
+    'https://api.visionfly.ai/v1/transform/crop50,100,400,300/example.com/image.jpg',
+    headers={'VF-API-Key': 'your-api-key'}
+)
+
+with open('cropped.jpg', 'wb') as f:
+    f.write(response.content)
+
+# Alternative bracket syntax
+response = requests.get(
+    'https://api.visionfly.ai/v1/transform/crop[50,100,400,300]/example.com/image.jpg',
+    headers={'VF-API-Key': 'your-api-key'}
+)
+
+with open('cropped_alt.jpg', 'wb') as f:
+    f.write(response.content)
+```
+
+## Smart Cropping
+
+Use smart cropping to maintain a specific aspect ratio.
+
+### JavaScript
+
+```javascript
+// Smart crop to maintain 16:9 aspect ratio
+fetch(
+  "https://api.visionfly.ai/v1/transform/w800-h450-smart_crop/example.com/image.jpg",
+  {
+    headers: {
+      "VF-API-Key": "your-api-key",
+    },
+  }
+)
+  .then((response) => response.blob())
+  .then((imageBlob) => {
+    const imageUrl = URL.createObjectURL(imageBlob);
+    document.getElementById("result").src = imageUrl;
+  });
+```
+
+### Python
+
+```python
+import requests
+
+# Smart crop to maintain 16:9 aspect ratio
+response = requests.get(
+    'https://api.visionfly.ai/v1/transform/w800-h450-smart_crop/example.com/image.jpg',
+    headers={'VF-API-Key': 'your-api-key'}
+)
+
+with open('smart_cropped.jpg', 'wb') as f:
+    f.write(response.content)
+```
+
+## Processing Uploaded Images
+
+Upload and transform your own images.
+
+### JavaScript
+
+```javascript
+const fileInput = document.getElementById("fileInput");
+const file = fileInput.files[0];
+
+const formData = new FormData();
+formData.append("file", file);
+
+// Resize, convert to WebP, and optimize quality
+fetch("https://api.visionfly.ai/v1/transform/w800-h600-webp-q85", {
+  method: "POST",
+  headers: {
+    "VF-API-Key": "your-api-key",
+  },
+  body: formData,
+})
+  .then((response) => response.blob())
+  .then((imageBlob) => {
+    const imageUrl = URL.createObjectURL(imageBlob);
+    document.getElementById("result").src = imageUrl;
+  });
+```
+
+### Python
+
+```python
+import requests
+
+with open('image.jpg', 'rb') as f:
+    # Resize, convert to WebP, and optimize quality
+    response = requests.post(
+        'https://api.visionfly.ai/v1/transform/w800-h600-webp-q85',
+        headers={'VF-API-Key': 'your-api-key'},
+        files={'file': f}
+    )
+
+with open('processed.webp', 'wb') as f:
+    f.write(response.content)
+```
+
+## Combining Multiple Transformations
+
+Apply multiple transformations in a single request.
+
+### JavaScript
+
+```javascript
+// Crop, resize, adjust brightness, convert to WebP
+fetch(
+  "https://api.visionfly.ai/v1/transform/crop100,100,500,500-w300-h300-bri1.1-webp-q85/example.com/image.jpg",
+  {
+    headers: {
+      "VF-API-Key": "your-api-key",
+    },
+  }
+)
+  .then((response) => response.blob())
+  .then((imageBlob) => {
+    const imageUrl = URL.createObjectURL(imageBlob);
+    document.getElementById("result").src = imageUrl;
+  });
+```
+
+### Python
+
+```python
+import requests
+
+# Crop, resize, adjust brightness, convert to WebP
+response = requests.get(
+    'https://api.visionfly.ai/v1/transform/crop100,100,500,500-w300-h300-bri1.1-webp-q85/example.com/image.jpg',
+    headers={'VF-API-Key': 'your-api-key'}
+)
+
+with open('combined.webp', 'wb') as f:
+    f.write(response.content)
+```
+
+## Common Use Cases
+
+### E-commerce Product Images
+
+Generate multiple sizes and formats for product images.
+
+```javascript
+// Thumbnail version
+fetch('https://api.visionfly.ai/v1/transform/w200-h200-webp-q85/example.com/product.jpg', {...})
+
+// Featured image version
+fetch('https://api.visionfly.ai/v1/transform/w800-h600-webp-q85/example.com/product.jpg', {...})
+
+// Zoom version
+fetch('https://api.visionfly.ai/v1/transform/w1200-webp-q90/example.com/product.jpg', {...})
+```
+
+### Social Media Images
+
+Prepare images for different social media platforms with their specific requirements.
+
+```javascript
+// Instagram square crop
+fetch('https://api.visionfly.ai/v1/transform/w1080-h1080-smart_crop-webp-q90/example.com/image.jpg', {...})
+
+// Twitter header (1500x500)
+fetch('https://api.visionfly.ai/v1/transform/w1500-h500-smart_crop-webp-q85/example.com/image.jpg', {...})
+
+// LinkedIn article header (1200x627)
+fetch('https://api.visionfly.ai/v1/transform/w1200-h627-smart_crop-webp-q85/example.com/image.jpg', {...})
+```
+
+### Responsive Images
+
+Generate multiple sizes for responsive websites.
+
+```javascript
+// Mobile size
+fetch('https://api.visionfly.ai/v1/transform/w400-webp-q80/example.com/image.jpg', {...})
+
+// Tablet size
+fetch('https://api.visionfly.ai/v1/transform/w800-webp-q85/example.com/image.jpg', {...})
+
+// Desktop size
+fetch('https://api.visionfly.ai/v1/transform/w1200-webp-q90/example.com/image.jpg', {...})
+```
