@@ -1,0 +1,571 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "VisionFly API",
+    "description": "Developer friendly image processing API",
+    "version": "1.0.0",
+    "contact": {
+      "name": "VisionFly Support",
+      "url": "https://visionfly.ai/support",
+      "email": "support@visionfly.ai"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.visionfly.ai",
+      "description": "Production server"
+    }
+  ],
+  "security": [
+    {
+      "apiKey": []
+    }
+  ],
+  "paths": {
+    "/v1/transform/{params}/{source}": {
+      "get": {
+        "summary": "Transform Image from URL",
+        "description": "Transform an image from a remote URL according to specified parameters",
+        "operationId": "transformImageFromUrl",
+        "parameters": [
+          {
+            "name": "params",
+            "in": "path",
+            "required": true,
+            "description": "Hyphen-separated transformation parameters (e.g., w800-h600-webp-q85)",
+            "schema": {
+              "type": "string"
+            },
+            "example": "w800-h600-webp-q85"
+          },
+          {
+            "name": "source",
+            "in": "path",
+            "required": true,
+            "description": "URL-encoded image URL (e.g., example.com/image.jpg)",
+            "schema": {
+              "type": "string"
+            },
+            "example": "example.com/image.jpg"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transformed image",
+            "headers": {
+              "Content-Type": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "The content type of the returned image",
+                "example": "image/webp"
+              },
+              "X-Processing-Time": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "The time taken to process the image",
+                "example": "0.123s"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Cache control header",
+                "example": "public, max-age=604800"
+              }
+            },
+            "content": {
+              "image/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                },
+                "example": "[Binary image data]"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "invalid-params": {
+                    "value": {
+                      "error": "Invalid transformation parameters"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "missing-api-key": {
+                    "value": {
+                      "error": "Missing API key"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "invalid-api-key": {
+                    "value": {
+                      "error": "Invalid API key"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Source image not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "image-not-found": {
+                    "value": {
+                      "error": "Source image not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "server-error": {
+                    "value": {
+                      "error": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/transform/{params}": {
+      "post": {
+        "summary": "Transform Uploaded Image",
+        "description": "Transform an uploaded image according to specified parameters",
+        "operationId": "transformUploadedImage",
+        "parameters": [
+          {
+            "name": "params",
+            "in": "path",
+            "required": true,
+            "description": "Hyphen-separated transformation parameters (e.g., w800-h600-webp-q85)",
+            "schema": {
+              "type": "string"
+            },
+            "example": "w800-h600-webp-q85"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The image file to be processed"
+                  }
+                },
+                "required": ["file"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Transformed image",
+            "headers": {
+              "Content-Type": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "The content type of the returned image",
+                "example": "image/webp"
+              },
+              "X-Processing-Time": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "The time taken to process the image",
+                "example": "0.156s"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Cache control header",
+                "example": "public, max-age=604800"
+              }
+            },
+            "content": {
+              "image/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                },
+                "example": "[Binary image data]"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid parameters or file",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "invalid-file": {
+                    "value": {
+                      "error": "Invalid image file"
+                    }
+                  },
+                  "invalid-params": {
+                    "value": {
+                      "error": "Invalid transformation parameters"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "missing-api-key": {
+                    "value": {
+                      "error": "Missing API key"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "invalid-api-key": {
+                    "value": {
+                      "error": "Invalid API key"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload Too Large - Image exceeds maximum size",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "file-too-large": {
+                    "value": {
+                      "error": "File size exceeds the maximum limit of 10MB"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity - Unable to process the image",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "processing-error": {
+                    "value": {
+                      "error": "Unable to process the image"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "server-error": {
+                    "value": {
+                      "error": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/upload": {
+      "post": {
+        "summary": "Upload Image",
+        "description": "Upload an image and store it temporarily on the server",
+        "operationId": "uploadImage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The image file to be uploaded"
+                  }
+                },
+                "required": ["file"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Image uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Unique ID for the uploaded image",
+                      "example": "img_a1b2c3d4"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Success message",
+                      "example": "Image uploaded successfully"
+                    },
+                    "transform_url": {
+                      "type": "string",
+                      "description": "URL template for transforming the uploaded image",
+                      "example": "/v1/transform/{params}/img_a1b2c3d4"
+                    }
+                  }
+                },
+                "examples": {
+                  "successful-upload": {
+                    "value": {
+                      "id": "img_a1b2c3d4",
+                      "message": "Image uploaded successfully",
+                      "transform_url": "/v1/transform/{params}/img_a1b2c3d4"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid file",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "invalid-file": {
+                    "value": {
+                      "error": "Invalid image file"
+                    }
+                  },
+                  "unsupported-format": {
+                    "value": {
+                      "error": "Unsupported image format"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "missing-api-key": {
+                    "value": {
+                      "error": "Missing API key"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "invalid-api-key": {
+                    "value": {
+                      "error": "Invalid API key"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload Too Large - Image exceeds maximum size",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "file-too-large": {
+                    "value": {
+                      "error": "File size exceeds the maximum limit of 10MB"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "server-error": {
+                    "value": {
+                      "error": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ping": {
+      "get": {
+        "summary": "Health Check",
+        "description": "Check if the API is running",
+        "operationId": "healthCheck",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "API is running",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "VisionFly API is running"
+                    }
+                  }
+                },
+                "examples": {
+                  "health-check": {
+                    "value": {
+                      "status": "ok",
+                      "message": "VisionFly API is running"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Invalid API key"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "apiKey": {
+        "type": "apiKey",
+        "name": "VF-API-Key",
+        "in": "header",
+        "description": "VisionFly API key for authentication"
+      }
+    }
+  }
+}

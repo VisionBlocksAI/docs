@@ -1,0 +1,81 @@
+Here's the comprehensive Best Practices section for your VisionFly API documentation:
+
+# Best Practices
+
+Follow these best practices to get the most out of VisionFly API and ensure optimal performance, security, and cost efficiency.
+
+## Security
+
+### API Key Management
+
+- **Keep API Keys Secret**: Never expose API keys in client-side code. Make API calls from your server.
+- **Rotate Keys Regularly**: Change your API keys periodically to minimize risk from potential exposure.
+- **Use Environment Variables**: Store API keys in environment variables, not in your code repository.
+- **Restrict API Access**: Apply IP restrictions when possible for additional security.
+
+### Request Security
+
+- **Use HTTPS**: Always use HTTPS when making API calls to ensure data is encrypted in transit.
+- **Validate Input**: Sanitize and validate all inputs before passing them to the API, especially when using dynamic parameters.
+- **Implement Timeouts**: Set reasonable timeouts for API requests to prevent hanging connections.
+
+## Performance Optimization
+
+### Caching
+
+- **Implement Browser Caching**: Set appropriate cache headers on your frontend to avoid unnecessary API calls.
+- **Cache Results**: Store transformed images in your own cache when appropriate.
+- **Use CDN**: Place transformed images on a CDN for faster delivery to end users.
+
+### Parameter Optimization
+
+- **Resize at Source**: Resize images at the source when possible to reduce bandwidth usage.
+- **Optimize Quality Settings**: Use the lowest acceptable quality setting for your use case (typically q70-q85 for webp).
+- **Choose Appropriate Formats**: Use WebP for most web applications for its superior compression.
+
+### Batch Processing
+
+- **Preprocess Common Sizes**: For high-traffic images, preprocess and cache common transformations.
+- **Batch Similar Operations**: When processing multiple images, group similar transformations together.
+
+## Cost Efficiency
+
+- **Only Transform What's Needed**: Only apply necessary transformations to minimize processing time.
+- **Use Appropriate Dimensions**: Don't request larger images than needed for your application.
+- **Monitor Usage**: Regularly review your API usage to identify optimization opportunities.
+
+## Responsive Images
+
+- **Serve Multiple Sizes**: Generate different image sizes for various viewport dimensions.
+- **Use Image Sets**: Implement `srcset` in HTML to let browsers choose the appropriate image size.
+
+```html Responsive Images
+<img
+  src="https://api.visionfly.ai/v1/transform/w800/example.com/image.jpg"
+  srcset="
+    https://api.visionfly.ai/v1/transform/w400/example.com/image.jpg   400w,
+    https://api.visionfly.ai/v1/transform/w800/example.com/image.jpg   800w,
+    https://api.visionfly.ai/v1/transform/w1200/example.com/image.jpg 1200w
+  "
+  sizes="(max-width: 600px) 400px, (max-width: 1200px) 800px, 1200px"
+  alt="Responsive image"
+/>
+```
+
+## Error Handling
+
+- **Implement Graceful Fallbacks**: Handle API errors gracefully to maintain user experience.
+- **Retry Strategy**: Implement exponential backoff for transient errors.
+- **Log Failures**: Monitor and log API failures to identify patterns or issues.
+
+## Image Quality
+
+- **Balance Quality and Size**: Find the right balance between image quality and file size for your specific use case.
+- **Test Across Devices**: Check how your transformed images look on various devices and screen sizes.
+- **Consider Art Direction**: Use smart cropping for different aspect ratios rather than simple resizing.
+
+## Privacy
+
+- **Respect User Privacy**: Only process images that users have consented to process.
+- **Delete When Done**: Remember that VisionFly doesn't store images permanently, but you should also avoid unnecessary retention of processed images.
+- **Secure Image Transmission**: Always use HTTPS when displaying processed images.

@@ -1,11 +1,11 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "maple",
+  "theme": "willow",
   "name": "Vision Fly AI",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
-    "dark": "#15803D"
+    "dark": "#1B7B7B"
   },
   "favicon": "/favicon.png",
   "navigation": {
@@ -16,17 +16,6 @@
           {
             "group": "Get Started",
             "pages": ["introduction", "quickstart", "development"]
-          },
-          {
-            "group": "Essentials",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/settings",
-              "essentials/navigation",
-              "essentials/reusable-snippets"
-            ]
           }
         ]
       },
@@ -35,15 +24,21 @@
         "groups": [
           {
             "group": "API Documentation",
-            "pages": ["api-reference/introduction", "api-reference/parameters"]
+            "pages": [
+              "api-reference/introduction",
+              "api-reference/parameters",
+              "api-reference/best-practices"
+            ]
           },
           {
             "group": "API Examples",
             "pages": ["api-reference/examples"]
           },
           {
-            "group": "Endpoint Examples",
-            "pages": ["api-reference/endpoints/get.mdx"]
+            "group": "Endpoints",
+            "openapi": {
+              "source": "api-reference/openapi.json"
+            }
           }
         ]
       }
@@ -52,13 +47,8 @@
       "anchors": [
         {
           "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
+          "href": "https://docs.visionfly.ai",
           "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
         },
         {
           "anchor": "Blog",
@@ -69,30 +59,22 @@
     }
   },
 
-  "api": {
-    "mdx": {
-      "server": "https:/api.visionfly.ai/",
-      "auth": {
-        "method": "key",
-        "name": "vf-api-key"
-      }
-    }
-  },
   "logo": {
     "light": "/logo/logo-no-background.svg",
-    "dark": "/logo/logo-no-background.svg"
+    "dark": "/logo/logo-no-background.svg",
+    "href": "https://visionfly.ai"
   },
   "navbar": {
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:hello@visionfly.ai"
       }
     ],
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "href": "https://dashboard.visionfly.ai"
     }
   },
   "footer": {
