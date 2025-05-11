@@ -24,29 +24,29 @@
       {
         "group": "API Reference",
         "pages": [
-          "api/introduction",
+          "/api/introduction",
           {
             "group": "Upload",
-            "pages": ["api/upload"]
+            "pages": ["/api/upload"]
           },
           {
             "group": "Transform",
-            "pages": ["api/transform"]
+            "pages": ["/api/transform"]
           },
           {
             "group": "Responsive",
-            "pages": ["api/generate-srcset"]
+            "pages": ["/api/generate-srcset"]
           }
         ]
       },
       {
         "group": "VisionFly SDK",
-        "pages": ["sdk/javascript"]
+        "pages": ["/sdk/javascript"]
       },
 
       {
         "group": "Frequently Asked Questions",
-        "pages": ["faq/FAQ"]
+        "pages": ["/faq/FAQ"]
       }
     ],
 
