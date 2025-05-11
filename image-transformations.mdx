@@ -1,0 +1,297 @@
+# Image Transformations
+
+VisionFly provides a powerful set of image transformation capabilities that you can apply on-the-fly with simple URL parameters. This guide covers all available transformations and provides examples for each.
+
+<Tip>This section uses [VisionFly JS SDK](/sdk/javascript) for reference.</Tip>
+
+## Basic Transformations
+
+### Resizing
+
+Control the dimensions of your images while maintaining quality:
+
+```javascript
+// Resize to specific width
+const resizedUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  width: 800,
+});
+
+// Resize to specific height (maintaining aspect ratio)
+const heightResizedUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  height: 600,
+});
+
+// Resize to specific dimensions
+const preciseResizeUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  width: 800,
+  height: 600,
+});
+```
+
+### Format Conversion
+
+Convert images to modern, efficient formats:
+
+```javascript
+// Convert to WebP (typically 30% smaller than JPEG)
+const webpUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  format: "webp",
+});
+
+// Convert to AVIF (typically 50% smaller than JPEG)
+const avifUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  format: "avif",
+});
+
+// Auto format (delivers the best format based on browser support)
+const autoUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  format: "auto",
+});
+```
+
+### Quality Adjustment
+
+Control the compression level to balance quality and file size:
+
+```javascript
+// High quality (less compression)
+const highQualityUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  quality: 90,
+});
+
+// Balanced quality (good compression)
+const balancedUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  quality: 75,
+});
+
+// Low quality (maximum compression)
+const lowQualityUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  quality: 50,
+});
+```
+
+## Visual Adjustments
+
+### Blur
+
+Apply Gaussian blur effect:
+
+```javascript
+// Slight blur
+const lightBlurUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  blur: 10,
+});
+
+// Heavy blur
+const heavyBlurUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  blur: 50,
+});
+```
+
+### Sharpening
+
+Enhance image details with sharpening:
+
+```javascript
+// Subtle sharpening
+const subtleSharpUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  sharpen: 10,
+});
+
+// Strong sharpening
+const strongSharpUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  sharpen: 50,
+});
+```
+
+### Brightness
+
+Adjust image brightness:
+
+```javascript
+// Increase brightness
+const brighterUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  brightness: 20,
+});
+
+// Decrease brightness
+const darkerUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  brightness: -20,
+});
+```
+
+### Contrast
+
+Modify image contrast:
+
+```javascript
+// Increase contrast
+const highContrastUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  contrast: 25,
+});
+
+// Decrease contrast
+const lowContrastUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  contrast: -25,
+});
+```
+
+### Saturation
+
+Adjust color intensity:
+
+```javascript
+// Increase saturation (more vibrant)
+const saturatedUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  saturation: 30,
+});
+
+// Decrease saturation (less colorful)
+const desaturatedUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  saturation: -30,
+});
+
+// Remove all saturation (grayscale)
+const grayscaleUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  saturation: -100,
+});
+```
+
+### Hue Rotation
+
+Shift image colors by rotating the hue:
+
+```javascript
+// Slight hue shift
+const slightHueShiftUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  hue: 30,
+});
+
+// Dramatic hue shift
+const dramaticHueShiftUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  hue: 180,
+});
+```
+
+### Gamma Adjustment
+
+Fine-tune image luminance:
+
+```javascript
+// Modify gamma (affects mid-tones)
+const gammaAdjustedUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  gamma: 1.5,
+});
+```
+
+## Combining Transformations
+
+The real power of VisionFly comes from combining multiple transformations in a single operation:
+
+```javascript
+// Create a high-quality, optimized product image
+const productImageUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/product.jpg",
+  width: 800,
+  format: "webp",
+  quality: 85,
+  sharpen: 15,
+  brightness: 5,
+  contrast: 10,
+  saturation: 5,
+});
+
+// Create a blurred, desaturated background image
+const backgroundImageUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/background.jpg",
+  width: 1920,
+  height: 1080,
+  format: "webp",
+  quality: 70,
+  blur: 25,
+  saturation: -20,
+  brightness: -5,
+});
+
+// Create an artistic effect
+const artisticImageUrl = await visionfly.transformImage({
+  src: "https://cdn.visionfly.ai/user123/photo.jpg",
+  width: 1200,
+  format: "webp",
+  quality: 90,
+  contrast: 20,
+  saturation: -30,
+  hue: 210,
+  sharpen: 10,
+});
+```
+
+## Performance Recommendations
+
+For optimal performance and image quality:
+
+- **Use appropriate dimensions**: Never scale images up in the browser. Request the exact size you need.
+- **Use modern formats**: WebP and AVIF offer significant savings vs. JPEG and PNG.
+- **Balance quality**: Don't use high quality (90+) unless absolutely necessary.
+- **Leverage responsive images**: Use the `getSrcSet` method for responsive designs.
+- **Cache transformed URLs**: Store transformed URLs to avoid regenerating them.
+
+```javascript
+// Cache transformed URLs for reuse
+const imageUrlCache = new Map();
+
+async function getOptimizedImageUrl(cdnUrl, width) {
+  const cacheKey = `${cdnUrl}_${width}`;
+
+  if (imageUrlCache.has(cacheKey)) {
+    return imageUrlCache.get(cacheKey);
+  }
+
+  const transformedUrl = await visionfly.transformImage({
+    src: cdnUrl,
+    width: width,
+    format: "webp",
+  });
+
+  imageUrlCache.set(cacheKey, transformedUrl);
+  return transformedUrl;
+}
+```
+
+## Technical Details
+
+Under the hood, VisionFly uses advanced image processing algorithms to ensure the highest quality results:
+
+- **Intelligent resizing**: Uses Lanczos3 sampling for high-quality downscaling
+- **Smart compression**: Content-aware compression that preserves important details
+- **Color profile preservation**: Maintains color accuracy across transformations
+- **Metadata handling**: Strips unnecessary metadata to reduce file size
+
+## Next Steps
+
+Now that you understand image transformations, explore:
+
+- [Use Cases](/use-cases) - See how to apply these transformations in real-world scenarios

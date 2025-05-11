@@ -27,14 +27,14 @@ const visionfly = new VisionFly({
   apiSecret: "YOUR_API_SECRET",
 });
 
-// First, upload an image
-const uploadResult = await visionfly.upload({
+// First, uploadImage an image
+const uploadImageResult = await visionfly.uploadImage({
   file: new File(["..."], "example.jpg"),
 });
 
 // Now use the CDN URL for transformations
-const transformedImage = await visionfly.transform({
-  src: uploadResult.cdn_url,
+const transformedImage = await visionfly.transformImage({
+  src: uploadImageResult.cdn_url,
   width: 800,
   height: 600,
   quality: 90,
@@ -43,7 +43,7 @@ const transformedImage = await visionfly.transform({
 
 // Generate responsive images using the CDN URL
 const responsiveImages = await visionfly.generateSrcset({
-  src: uploadResult.cdn_url,
+  src: uploadImageResult.cdn_url,
   widths: [400, 800, 1200],
   format: "webp",
   quality: 90,
@@ -56,9 +56,6 @@ const responsiveImages = await visionfly.generateSrcset({
 const visionfly = new VisionFly({
   apiKey: "YOUR_API_KEY",
   apiSecret: "YOUR_API_SECRET",
-  baseUrl: "https://api.visionfly.ai", // optional
-  timeout: 30000, // optional, default: 30000ms
-  retries: 3, // optional, default: 3
 });
 ```
 
@@ -99,16 +96,16 @@ https://cdn.visionfly.ai/12345/images/product-1.jpg
 3. **Better SEO**: Fast image loading improves Core Web Vitals
 4. **Global Reach**: Consistent performance worldwide
 
-## Image Upload
+## Image uploadImage
 
 ```javascript
-// Basic upload
-const result = await visionfly.upload({
+// Basic uploadImage
+const result = await visionfly.uploadImage({
   file: new File(["..."], "example.jpg"),
 });
 
-// Upload with custom public ID
-const resultWithId = await visionfly.upload({
+// uploadImage with custom public ID
+const resultWithId = await visionfly.uploadImage({
   file: new File(["..."], "example.jpg"),
   public_id: "summer-collection-2024",
 });
@@ -120,15 +117,15 @@ console.log(result.cdn_url); // https://cdn.visionfly.ai/<user_id>/images/exampl
 ## Image Transformation
 
 ```javascript
-// Basic transformation using uploaded image
-const result = await visionfly.transform({
+// Basic transformation using uploadImage API response
+const result = await visionfly.transformImage({
   src: "https://cdn.visionfly.ai/<user_id>/images/example.jpg",
   width: 800,
   height: 600,
 });
 
 // Advanced transformation with filters
-const result = await visionfly.transform({
+const result = await visionfly.transformImage({
   src: "https://cdn.visionfly.ai/<user_id>/images/example.jpg",
   width: 800,
   height: 600,
@@ -147,7 +144,7 @@ const result = await visionfly.transform({
 ## Responsive Images
 
 ```javascript
-// Generate srcset using uploaded image
+// Generate srcset using uploadImage API response
 const result = await visionfly.generateSrcset({
   src: "https://cdn.visionfly.ai/<user_id>/images/example.jpg",
   widths: [400, 800, 1200],
@@ -168,14 +165,14 @@ img.alt = "Responsive image";
 
 ```javascript
 try {
-  // First upload the image
-  const uploadResult = await visionfly.upload({
+  // First uploadImage the image
+  const uploadImageResult = await visionfly.uploadImage({
     file: new File(["..."], "example.jpg"),
   });
 
   // Then transform it
-  const result = await visionfly.transform({
-    src: uploadResult.cdn_url,
+  const result = await visionfly.transformImage({
+    src: uploadImageResult.cdn_url,
     width: 800,
   });
 } catch (error) {
@@ -216,9 +213,9 @@ try {
    - Use meaningful sizes attributes
 
 5. **Security**
-   - Use server-side uploads for sensitive images
+   - Use server-side uploadImages for sensitive images
    - Implement proper CORS policies
-   - Validate file types and sizes before upload
+   - Validate file types and sizes before uploadImage
 
 ## API Reference
 
@@ -234,7 +231,7 @@ class VisionFly {
     retries?: number;
   });
 
-  upload(options: UploadOptions): Promise<UploadResponse>;
+  uploadImage(options: uploadImageOptions): Promise<uploadImageResponse>;
   transform(options: TransformOptions): Promise<TransformResponse>;
   generateSrcset(options: SrcsetOptions): Promise<SrcsetResponse>;
 }
@@ -243,12 +240,12 @@ class VisionFly {
 ### Types
 
 ```typescript
-interface UploadOptions {
+interface uploadImageOptions {
   file: File;
   public_id?: string;
 }
 
-interface UploadResponse {
+interface uploadImageResponse {
   success: boolean;
   error: string;
   cdn_url: string;

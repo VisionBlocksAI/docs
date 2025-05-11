@@ -1,285 +1,656 @@
 ---
-title: Examples
-description: Practical examples of using the VisionFly API
+title: API Examples
+description: Practical examples of using the VisionFly API for image transformation and optimization
 ---
 
 # API Examples
 
-This page provides practical examples of using the VisionFly API in various scenarios.
+<Note>
+  Using the VisionFly SDK is strongly recommended over raw HTTP requests for
+  several advantages: - Enhanced security through proper authentication handling
+  - Improved performance with automatic request optimization - Built-in error
+  handling and retry mechanisms - Simplified integration with fewer lines of
+  code - Automatic caching for faster subsequent operations
+</Note>
+
+This page provides practical examples for developers who need to work directly with the VisionFly API endpoints. For most use cases, we recommend using our [JavaScript SDK](/docs/sdk) instead.
 
 ## Basic Image Transformation
 
-### 1. Simple Resize
-
+<Tabs>
+<Tab title="Resize">
 ```bash
 # Resize image to 800px width, maintaining aspect ratio
-GET /transform/?src=https://example.com/image.jpg&w=800
+GET /transform?src=https://cdn.visionfly.ai/user123/image.jpg&w=800
 ```
 
-### 2. Resize with Quality
+This transformation maintains the original aspect ratio of the image while setting the width to 800 pixels.
 
+</Tab>
+<Tab title="Resize with Quality">
 ```bash
 # Resize to 800x600 with 90% quality
-GET /transform/?src=https://example.com/image.jpg&w=800&h=600&q=90
+GET /transform?src=https://cdn.visionfly.ai/user123/image.jpg&w=800&h=600&q=90
 ```
 
-### 3. Format Conversion
+This transformation resizes the image to exactly 800x600 pixels with 90% quality setting.
 
+</Tab>
+<Tab title="Format Conversion">
 ```bash
 # Convert to WebP format
-GET /transform/?src=https://example.com/image.jpg&f=webp
+GET /transform?src=https://cdn.visionfly.ai/user123/image.jpg&f=webp
 
-# Convert to AVIF format
-GET /transform/?src=https://example.com/image.jpg&f=avif
-```
+# Convert to AVIF format for even smaller file size
 
-## Image Effects
+GET /transform?src=https://cdn.visionfly.ai/user123/image.jpg&f=avif
 
-### 1. Basic Effects
+````
 
+Modern formats like WebP and AVIF can reduce file sizes by 30-50% compared to JPEG or PNG.
+</Tab>
+</Tabs>
+
+## Visual Adjustments & Effects
+
+<CardGroup cols={2}>
+  <Card title="Blur Effect" icon="blur">
+    ```bash
+    # Apply blur effect (values: 0-100)
+    GET /transform?src=https://cdn.visionfly.ai/user123/image.jpg&blur=10
+    ```
+
+    Perfect for creating background images or focus effects.
+  </Card>
+  <Card title="Sharpening" icon="wand-magic-sparkles">
+    ```bash
+    # Apply sharpening (values: 0-100)
+    GET /transform?src=https://cdn.visionfly.ai/user123/image.jpg&sharp=20
+    ```
+
+    Improves detail visibility, especially useful for product images.
+  </Card>
+  <Card title="Brightness & Contrast" icon="sun-bright">
+    ```bash
+    # Adjust brightness and contrast (values: -100 to 100)
+    GET /transform?src=https://cdn.visionfly.ai/user123/image.jpg&bri=10&con=20
+    ```
+
+    Fine-tune the visual appearance of your images.
+  </Card>
+  <Card title="Color Adjustments" icon="palette">
+    ```bash
+    # Adjust saturation (values: -100 to 100)
+    GET /transform?src=https://cdn.visionfly.ai/user123/image.jpg&sat=30
+
+    # Rotate hue (values: 0-360)
+    GET /transform?src=https://cdn.visionfly.ai/user123/image.jpg&hue=180
+    ```
+
+    Control the color mood of your images.
+  </Card>
+</CardGroup>
+
+<Accordion title="Advanced Parameters">
 ```bash
-# Apply blur effect
-GET /transform/?src=https://example.com/image.jpg&blur=10
+# Adjust gamma (values: 1.0-3.0)
+GET /transform?src=https://cdn.visionfly.ai/user123/image.jpg&gamma=2.0
 
-# Apply sharpening
-GET /transform/?src=https://example.com/image.jpg&sharp=20
+# Combine multiple adjustments for advanced effects
+GET /transform?src=https://cdn.visionfly.ai/user123/image.jpg&w=800&blur=5&sharp=10&bri=5&con=10&sat=-10&hue=15&gamma=1.8
+````
 
-# Adjust brightness and contrast
-GET /transform/?src=https://example.com/image.jpg&bri=10&con=20
-```
+Gamma adjustment affects the mid-tones of an image while preserving highlights and shadows. Combining multiple parameters gives you precise control over the final appearance.
 
-### 2. Color Adjustments
-
-```bash
-# Adjust saturation
-GET /transform/?src=https://example.com/image.jpg&sat=30
-
-# Rotate hue
-GET /transform/?src=https://example.com/image.jpg&hue=180
-
-# Adjust gamma
-GET /transform/?src=https://example.com/image.jpg&gamma=2.0
-```
+</Accordion>
 
 ## Responsive Images
 
-### 1. Basic Srcset
-
+<Tabs>
+<Tab title="Basic Srcset">
 ```bash
 # Generate srcset for responsive images
-GET /generate/srcset?src=https://example.com/image.jpg&w=400,800,1200
+GET /generate/srcset?src=https://cdn.visionfly.ai/user123/image.jpg&w=400,800,1200
 ```
 
-### 2. Srcset with Format
+Creates a responsive image set with multiple sizes for different viewport widths.
 
+</Tab>
+<Tab title="Srcset with Format">
 ```bash
 # Generate WebP srcset
-GET /generate/srcset?src=https://example.com/image.jpg&w=400,800,1200&f=webp
+GET /generate/srcset?src=https://cdn.visionfly.ai/user123/image.jpg&w=400,800,1200&f=webp
 ```
 
-### 3. Srcset with Sizes
+Creates a responsive image set in WebP format for better performance.
 
+</Tab>
+<Tab title="Srcset with Sizes">
 ```bash
 # Generate srcset with sizes attribute
-GET /generate/srcset?src=https://example.com/image.jpg&w=400,800,1200&sizes=(max-width: 600px) 100vw, 50vw
+GET /generate/srcset?src=https://cdn.visionfly.ai/user123/image.jpg&w=400,800,1200&sizes=(max-width:%20600px)%20100vw,%2050vw
+```
+
+Creates a responsive image set with a specified sizes attribute for precise art direction.
+
+</Tab>
+</Tabs>
+
+### Sample Response
+
+```json
+{
+  "srcset": "https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/user123/image.jpg&w=400&f=webp 400w, https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/user123/image.jpg&w=800&f=webp 800w, https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/user123/image.jpg&w=1200&f=webp 1200w",
+  "sizes": "(max-width: 1200px) 100vw, 1200px",
+  "default": "https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/user123/image.jpg&w=800&f=webp"
+}
 ```
 
 ## Integration Examples
 
-### 1. HTML Integration
+### HTML Integration
 
+<Tabs>
+<Tab title="Basic Image">
 ```html
 <!-- Basic image -->
 <img
-  src="https://api.visionfly.ai/transform/?src=IMAGE_URL&w=800&q=80"
+  src="https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/user123/image.jpg&w=800&q=80"
   alt="Example Image"
+  width="800"
+  height="600"
+  loading="lazy"
 />
-
+```
+</Tab>
+<Tab title="Responsive Image">
+```html
 <!-- Responsive image with srcset -->
 <img
   srcset="
-    https://api.visionfly.ai/transform/?src=IMAGE_URL&w=400&q=80   400w,
-    https://api.visionfly.ai/transform/?src=IMAGE_URL&w=800&q=80   800w,
-    https://api.visionfly.ai/transform/?src=IMAGE_URL&w=1200&q=80 1200w
+    https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/user123/image.jpg&w=400&q=80   400w,
+    https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/user123/image.jpg&w=800&q=80   800w,
+    https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/user123/image.jpg&w=1200&q=80 1200w
   "
   sizes="(max-width: 600px) 100vw, 50vw"
-  src="https://api.visionfly.ai/transform/?src=IMAGE_URL&w=800&q=80"
+  src="https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/user123/image.jpg&w=800&q=80"
   alt="Responsive Example"
+  loading="lazy"
 />
 ```
+</Tab>
+<Tab title="Art Direction">
+```html
+<!-- Art direction with picture element -->
+<picture>
+  <!-- Mobile version (square crop) -->
+  <source
+    media="(max-width: 600px)"
+    srcset="https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/user123/image.jpg&w=600&h=600&q=80"
+  />
+  <!-- Tablet version (landscape crop) -->
+  <source
+    media="(max-width: 1024px)"
+    srcset="https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/user123/image.jpg&w=1024&h=768&q=80"
+  />
+  <!-- Desktop version (original aspect ratio) -->
+  <img
+    src="https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/user123/image.jpg&w=1200&q=80"
+    alt="Art Direction Example"
+    loading="lazy"
+  />
+</picture>
+```
+</Tab>
+</Tabs>
 
-### 2. JavaScript Integration
+### JavaScript Integration
 
+<Tabs>
+<Tab title="Basic Transformation">
 ```javascript
 // Basic transformation
 async function transformImage(src, width, quality) {
+  const encodedSrc = encodeURIComponent(src);
   const response = await fetch(
-    `https://api.visionfly.ai/transform/?src=${src}&w=${width}&q=${quality}`
+    `https://api.visionfly.ai/transform?src=${encodedSrc}&w=${width}&q=${quality}`
   );
+  
+  if (!response.ok) {
+    throw new Error(`Transform request failed: ${response.status}`);
+  }
+  
   return response.url;
 }
 
+// Usage
+transformImage("https://cdn.visionfly.ai/user123/image.jpg", 800, 80)
+.then(url => {
+document.getElementById('myImage').src = url;
+})
+.catch(error => {
+console.error("Image transformation failed:", error);
+});
+
+````
+</Tab>
+<Tab title="Generate Srcset">
+```javascript
 // Generate srcset
 async function generateSrcset(src, widths, quality) {
+  const encodedSrc = encodeURIComponent(src);
+  const widthsStr = widths.join(',');
+
   const response = await fetch(
-    `https://api.visionfly.ai/generate/srcset?src=${src}&w=${widths}&q=${quality}`
+    `https://api.visionfly.ai/generate/srcset?src=${encodedSrc}&w=${widthsStr}&q=${quality}`
   );
+
+  if (!response.ok) {
+    throw new Error(`Srcset generation failed: ${response.status}`);
+  }
+
   const data = await response.json();
-  return data.srcset;
+  return {
+    srcset: data.srcset,
+    sizes: data.sizes,
+    default: data.default
+  };
 }
 
+// Usage
+generateSrcset("https://cdn.visionfly.ai/user123/image.jpg", [400, 800, 1200], 80)
+  .then(data => {
+    const img = document.getElementById('responsiveImage');
+    img.srcset = data.srcset;
+    img.sizes = data.sizes;
+    img.src = data.default;
+  })
+  .catch(error => {
+    console.error("Srcset generation failed:", error);
+  });
+````
+
+</Tab>
+<Tab title="Apply Effects">
+```javascript
 // Apply image effects
 async function applyEffects(src, effects) {
+  const encodedSrc = encodeURIComponent(src);
+  
+  // Build query string from effects object
   const params = new URLSearchParams({
-    src,
-    ...effects,
+    src: encodedSrc,
+    ...effects
   });
-  const response = await fetch(`https://api.visionfly.ai/transform/?${params}`);
+  
+  const response = await fetch(`https://api.visionfly.ai/transform?${params}`);
+  
+  if (!response.ok) {
+    throw new Error(`Effects application failed: ${response.status}`);
+  }
+  
   return response.url;
 }
-```
 
-### 3. React Component
+// Usage
+applyEffects("https://cdn.visionfly.ai/user123/image.jpg", {
+w: 800,
+blur: 5,
+sat: -20,
+con: 10,
+f: "webp"
+})
+.then(url => {
+document.getElementById('effectsImage').src = url;
+})
+.catch(error => {
+console.error("Effects application failed:", error);
+});
 
+````
+</Tab>
+</Tabs>
+
+### React Component Example
+
+<Tabs>
+<Tab title="ResponsiveImage.jsx">
 ```jsx
 import React from "react";
 
-const ResponsiveImage = ({ src, alt, sizes }) => {
+const ResponsiveImage = ({ src, alt, sizes = "(max-width: 600px) 100vw, 50vw" }) => {
+  // Define widths for responsive images
   const widths = [400, 800, 1200];
   const quality = 80;
+  const format = "webp";
 
+  // Ensure src is encoded properly
+  const encodedSrc = encodeURIComponent(src);
+
+  // Generate srcset string
   const srcset = widths
     .map(
       (width) =>
-        `https://api.visionfly.ai/transform/?src=${src}&w=${width}&q=${quality} ${width}w`
+        `https://api.visionfly.ai/transform?src=${encodedSrc}&w=${width}&q=${quality}&f=${format} ${width}w`
     )
     .join(", ");
 
+  // Default image URL (800px width)
+  const defaultSrc = `https://api.visionfly.ai/transform?src=${encodedSrc}&w=800&q=${quality}&f=${format}`;
+
   return (
     <img
-      src={`https://api.visionfly.ai/transform/?src=${src}&w=800&q=${quality}`}
+      src={defaultSrc}
       srcSet={srcset}
       sizes={sizes}
       alt={alt}
+      loading="lazy"
+      className="responsive-image"
     />
   );
 };
 
 export default ResponsiveImage;
+````
+
+</Tab>
+<Tab title="Usage.jsx">
+```jsx
+import React from "react";
+import ResponsiveImage from "./ResponsiveImage";
+
+const ProductPage = () => {
+return (
+<div className="product-container">
+<ResponsiveImage 
+        src="https://cdn.visionfly.ai/user123/product.jpg"
+        alt="Product Name"
+        sizes="(max-width: 768px) 100vw, 50vw"
+      />
+<div className="product-info">
+<h1>Product Name</h1>
+<p>Product description goes here...</p>
+<button className="buy-button">Add to Cart</button>
+</div>
+</div>
+);
+};
+
+export default ProductPage;
 ```
+</Tab>
+</Tabs>
 
-## Error Handling Examples
+## Error Handling
 
-### 1. Basic Error Handling
+<Warning>
+  Always implement proper error handling when working directly with the API to
+  ensure a good user experience even when transformations fail.
+</Warning>
 
+<Tabs>
+<Tab title="Basic Error Handling">
 ```javascript
 async function transformImage(src, width, quality) {
   try {
+    const encodedSrc = encodeURIComponent(src);
     const response = await fetch(
-      `https://api.visionfly.ai/transform/?src=${src}&w=${width}&q=${quality}`
+      `https://api.visionfly.ai/transform?src=${encodedSrc}&w=${width}&q=${quality}`
     );
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.message);
+      throw new Error(error.msg || `HTTP error! status: ${response.status}`);
     }
 
     return response.url;
-  } catch (error) {
-    console.error("Image transformation failed:", error);
-    // Return fallback image
-    return "https://example.com/fallback.jpg";
-  }
+
+} catch (error) {
+console.error("Image transformation failed:", error);
+// Return fallback image
+return "/path/to/fallback-image.jpg";
 }
-```
+}
 
-### 2. Retry Logic
-
+````
+</Tab>
+<Tab title="Retry Logic">
 ```javascript
 async function transformImageWithRetry(src, width, quality, maxRetries = 3) {
   let lastError;
+  const encodedSrc = encodeURIComponent(src);
 
   for (let i = 0; i < maxRetries; i++) {
     try {
       const response = await fetch(
-        `https://api.visionfly.ai/transform/?src=${src}&w=${width}&q=${quality}`
+        `https://api.visionfly.ai/transform?src=${encodedSrc}&w=${width}&q=${quality}`
       );
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.msg || `HTTP error! status: ${response.status}`);
       }
 
       return response.url;
     } catch (error) {
+      console.warn(`Attempt ${i + 1} failed:`, error.message);
       lastError = error;
+
       // Wait before retrying (exponential backoff)
-      await new Promise((resolve) =>
-        setTimeout(resolve, Math.pow(2, i) * 1000)
-      );
+      const delay = Math.min(1000 * Math.pow(2, i), 10000);
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
 
+  console.error(`All ${maxRetries} attempts failed`);
   throw lastError;
 }
-```
+````
 
-## Advanced Examples
+</Tab>
+</Tabs>
 
-### 1. Progressive Image Loading
+## Advanced Techniques
 
+<Accordion title="Progressive Image Loading">
 ```javascript
-async function loadProgressiveImage(src, width, quality) {
-  // Load low quality image first
-  const lowQualityUrl = await transformImage(src, width, 30);
-
-  // Create image element
+async function loadProgressiveImage(src, containerId, finalWidth = 800, finalQuality = 85) {
+  const container = document.getElementById(containerId);
+  const encodedSrc = encodeURIComponent(src);
+  
+  // Step 1: Load a tiny preview (20px wide, low quality)
+  const tinyUrl = `https://api.visionfly.ai/transform?src=${encodedSrc}&w=20&q=30&blur=3`;
+  
+  // Create image element with tiny preview
   const img = new Image();
-  img.src = lowQualityUrl;
-
-  // Load high quality image in background
-  const highQualityUrl = await transformImage(src, width, quality);
-  const highQualityImg = new Image();
-  highQualityImg.src = highQualityUrl;
-
-  // Replace with high quality when loaded
-  highQualityImg.onload = () => {
-    img.src = highQualityUrl;
+  img.className = 'progressive-image loading';
+  
+  // Apply tiny image immediately
+  img.src = tinyUrl;
+  container.appendChild(img);
+  
+  // Step 2: Load medium quality version
+  const mediumUrl = `https://api.visionfly.ai/transform?src=${encodedSrc}&w=${Math.round(finalWidth/2)}&q=60`;
+  
+  img.onload = () => {
+    // Once tiny image is loaded, start loading medium version
+    setTimeout(() => {
+      img.src = mediumUrl;
+    }, 100);
+    
+    // Step 3: Load final high quality image
+    const highQualityUrl = `https://api.visionfly.ai/transform?src=${encodedSrc}&w=${finalWidth}&q=${finalQuality}`;
+    
+    const highQualityImg = new Image();
+    highQualityImg.onload = () => {
+      // When high quality image is loaded, replace medium quality
+      img.src = highQualityUrl;
+      img.className = 'progressive-image loaded';
+    };
+    highQualityImg.src = highQualityUrl;
   };
-
+  
   return img;
 }
-```
 
-### 2. Image Gallery
+// Usage
+loadProgressiveImage('https://cdn.visionfly.ai/user123/large-image.jpg', 'image-container', 1200, 90);
 
+````
+
+This technique creates a smooth loading experience by progressively enhancing image quality. It's particularly effective for large hero images or product photos.
+</Accordion>
+
+<Accordion title="Image Gallery with Preloading">
 ```javascript
-class ImageGallery {
-  constructor(container, images) {
-    this.container = container;
-    this.images = images;
+class VisionFlyGallery {
+  constructor(containerId, images) {
+    this.container = document.getElementById(containerId);
+    this.images = images.map(img => ({
+      ...img,
+      src: encodeURIComponent(img.src)
+    }));
     this.currentIndex = 0;
+    this.preloadedImages = new Map();
+
+    this.createControls();
+    this.preloadNext();
+    this.showImage(0);
   }
 
-  async loadImage(index) {
+  createControls() {
+    // Create previous button
+    const prevButton = document.createElement('button');
+    prevButton.className = 'gallery-control prev';
+    prevButton.innerHTML = '&laquo;';
+    prevButton.addEventListener('click', () => this.previous());
+
+    // Create next button
+    const nextButton = document.createElement('button');
+    nextButton.className = 'gallery-control next';
+    nextButton.innerHTML = '&raquo;';
+    nextButton.addEventListener('click', () => this.next());
+
+    this.container.appendChild(prevButton);
+    this.container.appendChild(nextButton);
+  }
+
+  getTransformedUrl(index, width = 1200, quality = 90) {
     const image = this.images[index];
-    const url = await transformImage(image.src, 1200, 90);
-    return url;
+    return `https://api.visionfly.ai/transform?src=${image.src}&w=${width}&q=${quality}`;
+  }
+
+  preloadNext() {
+    // Preload the next 2 images
+    for (let i = 1; i <= 2; i++) {
+      const nextIndex = (this.currentIndex + i) % this.images.length;
+
+      if (!this.preloadedImages.has(nextIndex)) {
+        const url = this.getTransformedUrl(nextIndex);
+        const img = new Image();
+        img.src = url;
+        this.preloadedImages.set(nextIndex, img);
+      }
+    }
   }
 
   async showImage(index) {
-    const url = await this.loadImage(index);
-    this.container.style.backgroundImage = `url(${url})`;
+    // Clear current content
+    const imageContainer = this.container.querySelector('.gallery-image') ||
+                           document.createElement('div');
+    imageContainer.className = 'gallery-image';
+
+    // Get the image URL (either preloaded or new)
+    let imageUrl;
+    if (this.preloadedImages.has(index)) {
+      imageUrl = this.preloadedImages.get(index).src;
+    } else {
+      imageUrl = this.getTransformedUrl(index);
+    }
+
+    // Show loading state
+    imageContainer.classList.add('loading');
+
+    // Set the image
+    imageContainer.style.backgroundImage = `url(${imageUrl})`;
+
+    // Update caption if it exists
+    const caption = this.container.querySelector('.gallery-caption') ||
+                    document.createElement('div');
+    caption.className = 'gallery-caption';
+    caption.textContent = this.images[index].caption || '';
+
+    // Add elements to container if not already there
+    if (!imageContainer.parentNode) {
+      this.container.appendChild(imageContainer);
+    }
+
+    if (!caption.parentNode) {
+      this.container.appendChild(caption);
+    }
+
+    // Remove loading state after image loads
+    const img = new Image();
+    img.onload = () => {
+      imageContainer.classList.remove('loading');
+    };
+    img.src = imageUrl;
+
+    // Update current index
     this.currentIndex = index;
+
+    // Preload the next images
+    this.preloadNext();
   }
 
   next() {
-    this.showImage((this.currentIndex + 1) % this.images.length);
+    const nextIndex = (this.currentIndex + 1) % this.images.length;
+    this.showImage(nextIndex);
   }
 
   previous() {
-    this.showImage(
-      (this.currentIndex - 1 + this.images.length) % this.images.length
-    );
+    const prevIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+    this.showImage(prevIndex);
   }
 }
-```
+
+// Usage example
+const gallery = new VisionFlyGallery('product-gallery', [
+  {
+    src: 'https://cdn.visionfly.ai/user123/product-1.jpg',
+    caption: 'Product Front View'
+  },
+  {
+    src: 'https://cdn.visionfly.ai/user123/product-2.jpg',
+    caption: 'Product Side View'
+  },
+  {
+    src: 'https://cdn.visionfly.ai/user123/product-3.jpg',
+    caption: 'Product Detail View'
+  }
+]);
+````
+
+</Accordion>
+
+## Best Practices
+
+<Steps>
+  <Step title="Always URI encode your source URLs">
+    Properly encode URLs to handle special characters correctly
+  </Step>
+  <Step title="Set proper width and height attributes">
+    Prevent layout shifts by including dimensions in image elements
+  </Step>
+  <Step title="Use modern formats with fallbacks">
+    Prefer WebP or AVIF with JPEG as a fallback for older browsers
+  </Step>
+  <Step title="Balance quality settings">
+    Keep quality between 70-85 for optimal file size and visual quality
+  </Step>
+  <Step title="Implement responsive images">
+    Use srcset and sizes attributes to serve appropriate sizes for each device
+  </Step>
+</Steps>
+
+For more advanced implementation examples and best practices, check our [SDK documentation](/docs/sdk) and [use cases](/docs/use-cases).

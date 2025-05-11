@@ -13,7 +13,12 @@
     "groups": [
       {
         "group": "Getting Started",
-        "pages": ["introduction", "quickstart", "best-practices"]
+        "pages": [
+          "introduction",
+          "quickstart",
+          "use-cases",
+          "image-transformations"
+        ]
       },
       {
         "group": "API Reference",
@@ -30,9 +35,7 @@
           {
             "group": "Responsive",
             "pages": ["api/generate-srcset"]
-          },
-          "api/parameters",
-          "api/examples"
+          }
         ]
       },
       {
@@ -41,8 +44,8 @@
       },
 
       {
-        "group": "VisionFly Types",
-        "pages": ["api-reference/types/schemas"]
+        "group": "Frequently Asked Questions",
+        "pages": ["faq/FAQ"]
       }
     ],
 
@@ -86,7 +89,7 @@
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://dashboard.visionfly.ai"
+      "href": "https://visionfly.ai/dashboard"
     }
   },
   "footer": {

@@ -105,7 +105,7 @@ const uploadResult = await visionfly.upload({
 });
 
 // 2. Transform the image
-const transformedImage = await visionfly.transform({
+const transformedImage = await visionfly.transformImage({
   src: uploadResult.cdn_url,
   width: 800,
   height: 600,
@@ -157,31 +157,6 @@ Switching from another service? We make it easy:
 - **Status**: Check our status page for uptime
 
 Ready to get started? [Sign up now](https://visionfly.ai/) or [contact sales](mailto:hello@visionfly.ai) for enterprise solutions.
-
-# VisionFly Documentation
-
-## Modern Image Optimization & Transformation API
-
-VisionFly is a powerful API for image optimization, transformation, and delivery. It helps developers deliver faster websites with optimized images, improve SEO, and provide the best user experience across all devices.
-
-### Key Features
-
-- **Advanced Image Optimization** - Automatically convert images to modern formats like WebP and AVIF for smaller file sizes without quality loss
-- **Comprehensive Transformations** - Resize, crop, adjust quality, apply filters, and more with a simple API
-- **Lightning-Fast CDN** - Global content delivery network ensures images load quickly for users worldwide
-- **Responsive Images** - Generate responsive srcsets for optimal display across all devices
-- **Developer-Friendly SDKs** - Easy integration with JavaScript, React, and Next.js applications
-- **Secure by Design** - JWT authentication, secure uploading, and granular access controls
-
-### Why VisionFly?
-
-- **Improve Core Web Vitals** - Speed up your site with optimized images
-- **Reduce Bandwidth Costs** - Smaller image files mean lower hosting and bandwidth costs
-- **Boost SEO Rankings** - Faster sites rank higher in search results
-- **Simplify Development** - No need for complex image processing pipelines
-- **Modern Format Support** - Automatic WebP and AVIF conversion for browsers that support them
-
-Ready to get started? Check out our [Quick Start Guide](/quickstart).
 
 ---
 

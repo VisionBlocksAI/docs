@@ -1,0 +1,468 @@
+# Use Cases
+
+Discover how VisionFly can transform image delivery across different industries and applications. This guide provides practical examples and implementation approaches for common use cases.
+
+<Accordion title="E-commerce Product Images" defaultOpen={true}>
+### The Challenge
+
+Online stores need high-quality product images that load quickly across all devices. Slow-loading product images directly impact conversion rates and sales.
+
+### The Solution
+
+```javascript
+import { VisionFly } from "visionfly-sdk";
+
+const visionfly = new VisionFly({
+  apiKey: "your-api-key",
+  apiSecret: "your-api-secret",
+});
+
+// Function to generate product image variants
+async function generateProductImageSet(originalCdnUrl, productId) {
+  try {
+    // 1. Create thumbnail for product listings
+    const thumbnailUrl = await visionfly.transformImage({
+      src: originalCdnUrl,
+      width: 300,
+      height: 300,
+      format: "webp",
+      quality: 85,
+      sharpen: 15, // Enhance product details
+    });
+
+    // 2. Create medium-sized image for product cards
+    const mediumUrl = await visionfly.transformImage({
+      src: originalCdnUrl,
+      width: 600,
+      format: "webp",
+      quality: 85,
+      sharpen: 10,
+    });
+
+    // 3. Create high-quality image for product detail page
+    const detailUrl = await visionfly.transformImage({
+      src: originalCdnUrl,
+      width: 1200,
+      format: "webp",
+      quality: 90,
+      sharpen: 5,
+    });
+
+    // 4. Create responsive image set for product detail page
+    const responsiveSet = await visionfly.getSrcSet({
+      src: originalCdnUrl,
+      widths: [400, 800, 1200, 1600],
+      format: "webp",
+      quality: 90,
+    });
+
+    return {
+      productId,
+      thumbnail: thumbnailUrl,
+      medium: mediumUrl,
+      detail: detailUrl,
+      responsive: responsiveSet,
+    };
+  } catch (error) {
+    console.error("Error processing user upload:", error);
+    return null;
+  }
+}
+```
+
+### Implementation Example
+
+```html
+<!-- Product listing thumbnail -->
+<div class="product-card">
+  <img
+    src="THUMBNAIL_URL"
+    alt="Product Name"
+    loading="lazy"
+    width="300"
+    height="300"
+  />
+  <h3>Product Name</h3>
+  <p>$99.99</p>
+</div>
+
+<!-- Product detail page with responsive image -->
+<div class="product-detail">
+  <div class="product-image">
+    <img
+      src="DETAIL_URL"
+      srcset="RESPONSIVE_SRCSET"
+      sizes="(max-width: 768px) 100vw, 50vw"
+      alt="Product Name"
+      width="1200"
+      height="800"
+    />
+  </div>
+  <div class="product-info">
+    <h1>Product Name</h1>
+    <p class="price">$99.99</p>
+    <button class="add-to-cart">Add to Cart</button>
+  </div>
+</div>
+```
+
+### The Results
+
+- **40% faster page load times** with optimized images
+- **30% reduction in bandwidth usage** through modern formats
+- **Increased conversion rates** due to better user experience
+- **Improved SEO rankings** from better Core Web Vitals scores
+  </Accordion>
+
+<Accordion title="Content-Rich Media Sites">
+### The Challenge
+
+Media websites with image-heavy articles need to balance quality with performance across devices while maintaining their visual brand identity.
+
+### The Solution
+
+```javascript
+import { VisionFly } from "visionfly-sdk";
+
+const visionfly = new VisionFly({
+  apiKey: "your-api-key",
+  apiSecret: "your-api-secret",
+});
+
+// Function to process article images
+async function processArticleImage(originalCdnUrl, caption) {
+  try {
+    // 1. Create optimized featured image (with subtle brand styling)
+    const featuredImage = await visionfly.transformImage({
+      src: originalCdnUrl,
+      width: 1200,
+      format: "webp",
+      quality: 85,
+      contrast: 5, // Slight contrast boost for brand style
+      saturation: 5, // Subtle saturation increase
+    });
+
+    // 2. Create smaller in-article image
+    const inArticleImage = await visionfly.transformImage({
+      src: originalCdnUrl,
+      width: 800,
+      format: "webp",
+      quality: 80,
+      contrast: 5,
+      saturation: 5,
+    });
+
+    // 3. Create social media sharing image with different crop
+    const socialImage = await visionfly.transformImage({
+      src: originalCdnUrl,
+      width: 1200,
+      height: 630, // Optimal for social sharing
+      format: "webp",
+      quality: 85,
+      contrast: 8,
+      saturation: 8, // Slightly more vibrant for social media
+    });
+
+    // 4. Create responsive image set for article
+    const responsiveSet = await visionfly.getSrcSet({
+      src: originalCdnUrl,
+      widths: [400, 800, 1200, 1600],
+      format: "webp",
+      quality: 85,
+    });
+
+    return {
+      featured: featuredImage,
+      inArticle: inArticleImage,
+      social: socialImage,
+      responsive: responsiveSet,
+      caption,
+    };
+  } catch (error) {
+    console.error("Error processing article image:", error);
+  }
+}
+```
+
+### Implementation Example
+
+```html
+<!-- Article header with featured image -->
+<header class="article-header">
+  <img
+    src="FEATURED_IMAGE_URL"
+    srcset="RESPONSIVE_SRCSET"
+    sizes="(max-width: 768px) 100vw, 80vw"
+    alt="Article title image"
+    width="1200"
+  />
+  <h1>Article Title</h1>
+  <div class="article-meta">
+    <span class="author">By Author Name</span>
+    <span class="date">May 10, 2025</span>
+  </div>
+</header>
+
+<!-- In-article image with caption -->
+<figure class="article-image">
+  <img
+    src="IN_ARTICLE_IMAGE_URL"
+    alt="Image description"
+    loading="lazy"
+    width="800"
+  />
+  <figcaption>Image caption text</figcaption>
+</figure>
+
+<!-- Article meta tags for social sharing -->
+<meta property="og:image" content="SOCIAL_IMAGE_URL" />
+<meta name="twitter:image" content="SOCIAL_IMAGE_URL" />
+```
+
+### The Results
+
+- **Consistent visual branding** across all article images
+- **45% faster article loading** compared to unoptimized images
+- **Increased social sharing engagement** with optimized social images
+- **Better reader retention** from improved page performance
+  </Accordion>
+
+<Accordion title="Real Estate Photography">
+### The Challenge
+
+Real estate listings require high-quality images that load quickly on mobile devices and showcase properties in their best light.
+
+### The Solution
+
+```javascript
+import { VisionFly } from "visionfly-sdk";
+
+const visionfly = new VisionFly({
+  apiKey: "your-api-key",
+  apiSecret: "your-api-secret",
+});
+
+// Function to enhance real estate photos
+async function enhancePropertyImage(originalCdnUrl, type) {
+  try {
+    // Base transformation settings
+    const baseParams = {
+      src: originalCdnUrl,
+      format: "webp",
+      quality: 85,
+    };
+
+    // Specific enhancements based on image type
+    switch (type) {
+      case "exterior":
+        // Enhance exterior shots to improve curb appeal
+        return await visionfly.transformImage({
+          ...baseParams,
+          width: 1200,
+          sharpness: 10,
+          contrast: 5,
+          saturation: 5,
+          brightness: 3, // Slightly brighter exterior
+        });
+
+      case "interior":
+        // Enhance interior shots to look spacious and well-lit
+        return await visionfly.transformImage({
+          ...baseParams,
+          width: 1200,
+          sharpness: 5,
+          contrast: 8,
+          brightness: 12, // Brighten interiors more
+          saturation: -5, // Slightly desaturate for clean look
+        });
+
+      case "amenity":
+        // Enhance amenity shots (pool, gym, etc.)
+        return await visionfly.transformImage({
+          ...baseParams,
+          width: 800,
+          sharpness: 15,
+          contrast: 10,
+          saturation: 10, // More vibrant amenity features
+        });
+
+      default:
+        // Default enhancement for other property images
+        return await visionfly.transformImage({
+          ...baseParams,
+          width: 1000,
+          sharpness: 5,
+          contrast: 5,
+        });
+    }
+  } catch (error) {
+    console.error("Error enhancing property image:", error);
+  }
+}
+
+// Generate gallery for property listing
+async function createPropertyGallery(propertyImages) {
+  const gallery = {};
+
+  // Process each image with appropriate enhancement
+  for (const [key, image] of Object.entries(propertyImages)) {
+    gallery[key] = await enhancePropertyImage(image.cdnUrl, image.type);
+  }
+
+  // Create thumbnail strip images
+  const thumbnails = {};
+  for (const [key, image] of Object.entries(propertyImages)) {
+    thumbnails[key] = await visionfly.transformImage({
+      src: image.cdnUrl,
+      width: 200,
+      height: 150,
+      format: "webp",
+      quality: 80,
+    });
+  }
+
+  return {
+    fullImages: gallery,
+    thumbnails,
+  };
+}
+```
+
+### The Results
+
+- **Enhanced property appearance** with optimized images
+- **33% increase in listing engagement** from faster-loading galleries
+- **Higher conversion rates** from inquiry to viewing
+- **Better mobile experience** with appropriately sized images
+  </Accordion>
+
+<Accordion title="User-Generated Content">
+### The Challenge
+
+Platforms with user-generated content need to efficiently handle images of varying quality and sizes while maintaining performance and security.
+
+### The Solution
+
+```javascript
+import { VisionFly } from "visionfly-sdk";
+
+const visionfly = new VisionFly({
+  apiKey: "your-api-key",
+  apiSecret: "your-api-secret",
+});
+
+// Process user upload and create optimized versions
+async function processUserUpload(fileInput) {
+  try {
+    // 1. Upload the original file
+    const uploadResult = await visionfly.uploadImage({
+      file: fileInput.files[0],
+      publicId: "your_custom_public_id",
+    });
+
+    const originalCdnUrl = uploadResult.public_url;
+
+    // 2. Create standardized versions
+
+    // Profile picture (square crop)
+    const profileImage = await visionfly.transformImage({
+      src: originalCdnUrl,
+      width: 300,
+      height: 300,
+      format: "webp",
+      quality: 85,
+    });
+
+    // Timeline/feed version
+    const timelineImage = await visionfly.transformImage({
+      src: originalCdnUrl,
+      width: 800,
+      format: "webp",
+      quality: 80,
+    });
+
+    // Thumbnail version
+    const thumbnailImage = await visionfly.transformImage({
+      src: originalCdnUrl,
+      width: 150,
+      height: 150,
+      format: "webp",
+      quality: 75,
+    });
+
+    // 3. Store the generated URLs
+    return {
+      original: originalCdnUrl,
+      profile: profileImage,
+      timeline: timelineImage,
+      thumbnail: thumbnailImage,
+    };
+  } catch (error) {
+    console.error("Failed to process user upload:", error);
+    throw new Error(
+      "Unable to process the uploaded image. Please ensure the file is a valid image and try again."
+    );
+  }
+}
+```
+
+### Implementation Example
+
+```html
+<!-- User profile with optimized avatar -->
+<div class="user-profile">
+  <img
+    src="PROFILE_IMAGE_URL"
+    alt="User Name"
+    class="avatar"
+    width="300"
+    height="300"
+  />
+  <h2>User Name</h2>
+  <p>User bio text here...</p>
+</div>
+
+<!-- Post in timeline/feed -->
+<div class="post">
+  <div class="post-header">
+    <img
+      src="THUMBNAIL_IMAGE_URL"
+      alt="User Name"
+      class="post-avatar"
+      width="50"
+      height="50"
+    />
+    <span class="username">User Name</span>
+  </div>
+  <p class="post-text">Post content text...</p>
+  <img
+    src="TIMELINE_IMAGE_URL"
+    alt="Post image"
+    class="post-image"
+    loading="lazy"
+    width="800"
+  />
+  <div class="post-actions">
+    <button>Like</button>
+    <button>Comment</button>
+    <button>Share</button>
+  </div>
+</div>
+```
+
+### The Results
+
+- **Standardized image formats** across user content
+- **60% reduction in storage requirements** with optimized formats
+- **Improved feed loading times** with appropriately sized images
+- **Consistent user experience** regardless of original upload quality
+  </Accordion>
+
+## Next Steps
+
+These use cases represent just a small sample of what's possible with VisionFly. For more specific implementations or custom solutions:
+
+- [Image Transformations](/docs/image-transformations) - Explore all transformation parameters
+- [FAQ](/docs/faq) - Find answers to common questions
+- [API Reference](/docs/api-reference) - Dive into the technical details
+- [Contact Support](https://visionfly.ai/contact) - Reach out for custom implementation assistance

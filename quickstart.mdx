@@ -169,50 +169,217 @@ This will:
 - Increase contrast by 5%
 - Decrease saturation by 10%
 
-## Step 7: Use in Your Application
+# Use VisionFly SDK in Your Application
 
-Here's how to use VisionFly in different programming languages:
+This guide will help you get up and running with VisionFly in less than 5 minutes. Follow these simple steps to start optimizing and transforming your images.
 
-### JavaScript/TypeScript
+<Note>
+  It is highly recommended to use the SDK over raw HTTP requests because the SDK
+  is more secure and is more fast than making raw HTTP requests.
+</Note>
+## Step 1: Sign Up for VisionFly
 
-```typescript
+Make sure you have the VisionFly API key and API secret already.
+
+## Step 2: Install the VisionFly SDK
+
+Add the VisionFly SDK to your JavaScript project using npm or yarn:
+
+```bash
+# Using npm
+npm install visionfly-sdk
+
+# Using yarn
+yarn add visionfly-sdk
+```
+
+## Step 3: Initialize the SDK
+
+```javascript
 import { VisionFly } from "visionfly-sdk";
 
+// Initialize the SDK with your API credentials
 const visionfly = new VisionFly({
-  apiKey: "YOUR_API_KEY",
-  apiSecret: "YOUR_API_SECRET",
+  apiKey: "your-api-key",
+  apiSecret: "your-api-secret",
+});
+```
+
+## Step 4: Upload an Image
+
+Upload an image to the VisionFly CDN to get started:
+
+```javascript
+// Example function to handle file upload
+async function uploadImage(file) {
+  try {
+    // Upload the image to VisionFly
+    const result = await visionfly.uploadImage({
+      file: file,
+      publicId: "your-project-id",
+    });
+
+    // The result contains the CDN URL for your uploaded image
+    console.log("Image uploaded successfully!");
+    console.log("CDN URL:", result.public_url);
+
+    return result.public_url;
+  } catch (error) {
+    console.error("Upload failed:", error);
+  }
+}
+
+// Usage example with a file input
+document.getElementById("fileInput").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const cdnUrl = await uploadImage(file);
+    // Use the CDN URL for further transformations
+  }
+});
+```
+
+## Step 5: Transform and Optimize Images
+
+Now that you have your image on the CDN, you can transform it by adding parameters to the URL:
+
+```javascript
+// Transform an image that's already on the VisionFly CDN
+async function getOptimizedImage(cdnUrl) {
+  const transformedUrl = await visionfly.transformImage({
+    src: cdnUrl,
+    width: 800,
+    height: 600,
+    quality: 85,
+    format: "webp",
+  });
+
+  return transformedUrl;
+}
+
+// Example usage
+const optimizedUrl = await getOptimizedImage(
+  "https://cdn.visionfly.ai/user123/image.jpg"
+);
+document.getElementById("myImage").src = optimizedUrl;
+```
+
+## Step 6: Generate Responsive Images
+
+Create responsive image sets for different screen sizes:
+
+```javascript
+async function createResponsiveImage(cdnUrl) {
+  const srcSet = await visionfly.getSrcSet({
+    src: cdnUrl,
+    widths: [400, 800, 1200, 1600],
+    format: "webp",
+    quality: 80,
+  });
+
+  // The result contains the srcset string and a default URL
+  return {
+    srcset: srcSet.srcset,
+    sizes: srcSet.sizes,
+    defaultUrl: srcSet.default,
+  };
+}
+
+// Example usage
+const responsiveData = await createResponsiveImage(
+  "https://cdn.visionfly.ai/user123/image.jpg"
+);
+
+// Apply to an image element
+const img = document.getElementById("responsiveImage");
+img.srcset = responsiveData.srcset;
+img.sizes = responsiveData.sizes;
+img.src = responsiveData.defaultUrl;
+```
+
+## Complete Example
+
+Here's a complete example showing the full workflow from upload to display:
+
+```javascript
+import { VisionFly } from "visionfly-sdk";
+
+// Initialize the SDK
+const visionfly = new VisionFly({
+  apiKey: "your-api-key",
+  apiSecret: "your-api-secret",
 });
 
-// First, upload an image
-const uploadResult = await visionfly.upload({
-  file: new File(["..."], "image.jpg"),
-});
+// Function to handle the entire process
+async function processImage(file) {
+  try {
+    // Step 1: Upload the image
+    const uploadResult = await visionfly.uploadImage({
+      file: file,
+      publicId: "your-project-id",
+    });
 
-// Then use the CDN URL for transformations
-const result = await visionfly.transform({
-  src: uploadResult.cdn_url,
-  width: 800,
-  quality: 80,
-  format: "auto",
-});
+    const cdnUrl = uploadResult.public_url;
+    console.log("Image uploaded to:", cdnUrl);
 
-// Generate srcset using the CDN URL
-const srcset = await visionfly.generateSrcset({
-  src: uploadResult.cdn_url,
-  widths: [400, 800, 1200],
-  format: "auto",
+    // Step 2: Get a transformed version
+    const optimizedUrl = await visionfly.transformImage({
+      src: cdnUrl,
+      width: 800,
+      quality: 85,
+      format: "webp",
+      sharpen: 10,
+    });
+
+    console.log("Optimized image URL:", optimizedUrl);
+
+    // Step 3: Generate responsive versions
+    const responsiveData = await visionfly.getSrcSet({
+      src: cdnUrl,
+      widths: [400, 800, 1200],
+      format: "webp",
+    });
+
+    console.log("Responsive srcset:", responsiveData.srcset);
+
+    // Step 4: Display the image
+    document.getElementById("previewImage").src = optimizedUrl;
+
+    // Step 5: Apply responsive image attributes
+    const responsiveImg = document.getElementById("responsiveImage");
+    responsiveImg.srcset = responsiveData.srcset;
+    responsiveImg.sizes = responsiveData.sizes;
+    responsiveImg.src = responsiveData.default;
+
+    return {
+      cdnUrl,
+      optimizedUrl,
+      responsiveData,
+    };
+  } catch (error) {
+    console.error("Error processing image:", error);
+  }
+}
+
+// Event listener for file input
+document.getElementById("fileInput").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    await processImage(file);
+  }
 });
 ```
 
 ## Next Steps
 
-- Explore our [API Reference](/api-reference) for detailed endpoint documentation
-- Check out our [Best Practices](/guides/best-practices) guide
-- Join our [Discord community](https://discord.gg/visionfly) for support
-- Visit our [GitHub repository](https://github.com/visionfly) for SDKs and examples
+Now that you've got the basics covered, explore:
 
-## Need Help?
+- [Use Cases](/docs/use-cases) - See common implementations and best practices
+- [API Reference](/docs/api) - Explore the complete API documentation
 
-- Email: support@visionfly.ai
-- Discord: discord.gg/visionfly
-- Documentation: docs.visionfly.ai
+Ready to take your images to the next level? Let's dive deeper into VisionFly's capabilities!
+
+## Next Steps
+
+- Explore our [API Reference](/api) for detailed endpoint documentation
+- Visit our [GitHub repository](https://github.com/VisionBlocksAI/visionfly-sdk) for SDKs and examples

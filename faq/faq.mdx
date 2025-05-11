@@ -1,0 +1,285 @@
+# Frequently Asked Questions
+
+## General Questions
+
+<Accordion title="What is VisionFly?">
+  VisionFly is a powerful image optimization and transformation API that helps
+  you deliver optimized images through a global CDN. It allows you to transform,
+  resize, and enhance images on-the-fly using simple URL parameters or our
+  JavaScript SDK.
+</Accordion>
+
+<Accordion title="How does VisionFly differ from other image CDNs?">
+  VisionFly combines enterprise-grade performance with developer-friendly simplicity:
+
+- **Superior global coverage**: 74+ PoPs across 6 continents with an average response time of 24ms
+- **Modern format support**: Automatic WebP and AVIF conversion for 30-50% smaller file sizes
+- **Developer-first approach**: Simple SDK with intuitive transformations and minimal configuration
+- **Transparent pricing**: Predictable costs without hidden fees
+- **Best-in-class support**: Dedicated technical assistance and comprehensive documentation
+
+</Accordion>
+
+<Accordion title="What is the workflow for using VisionFly?">
+  The basic workflow follows these steps:
+
+1. Upload your image to VisionFly using the SDK
+2. Receive a CDN URL for your uploaded image
+3. Use the [SDK](/sdk/javascript) or [VisionFly API](/api) to create transformed versions by adding parameters
+4. Integrate the optimized images into your website or application
+
+</Accordion>
+
+<Accordion title="What image formats does VisionFly support?">
+  VisionFly supports all major image formats:
+
+- **Input formats**: JPEG, PNG, GIF, WebP, AVIF, SVG, TIFF, BMP
+- **Output formats**: JPEG, PNG, WebP, AVIF
+
+</Accordion>
+
+<Accordion title="What file size limits apply to uploads?">
+  VisionFly supports image uploads up to 10MB per file.
+</Accordion>
+
+## Technical Questions
+
+<Accordion title="How do I get started with VisionFly?">
+  
+1. Sign up for an account at
+[visionfly.ai/dashboard](https://visionfly.ai/dashboard). 
+2. Create a project to obtain your API key and secret 
+3. Install the SDK: `npm install
+visionfly-sdk` or use our [API](/api)  
+4. Follow our [Quick Start Guide](/docs/quickstart)
+
+</Accordion>
+
+<Accordion title="Where are my images stored?">
+  Your images are stored on VisionFly's global CDN infrastructure, which spans
+  74+ locations worldwide. This ensures your images are stored safely and
+  delivered quickly to users anywhere in the world.
+</Accordion>
+
+<Accordion title="How secure is VisionFly?">
+  VisionFly prioritizes security:
+
+- All data is encrypted in transit (TLS/SSL) and at rest (AES-256)
+- Authentication is required for all API operations
+- Private image support with signed URLs
+- Regular security audits and updates
+- GDPR compliant data handling
+
+</Accordion>
+
+<Accordion title="Does VisionFly automatically optimize my images?">
+  Yes. Even without specifying any parameters, VisionFly automatically:
+
+- Strips unnecessary metadata
+- Applies optimal compression
+- Delivers in modern formats when supported by the browser
+- Delivers the most appropriate size based on the client device
+
+</Accordion>
+
+<Accordion title="Can I use VisionFly with my existing CDN?">
+  Yes, you can use VisionFly as an optimization layer in front of your existing
+  CDN. Simply point VisionFly to your image source and then use the optimized
+  VisionFly URLs in your application.
+</Accordion>
+
+<Accordion title="How do I handle responsive images with VisionFly?">
+  VisionFly makes responsive images easy with the `getSrcSet` method:
+
+```javascript
+const responsiveSet = await visionfly.getSrcSet({
+  src: "https://cdn.visionfly.ai/user123/image.jpg",
+  widths: [400, 800, 1200, 1600],
+  format: "webp",
+});
+
+// Use in HTML
+const img = document.createElement("img");
+img.srcset = responsiveSet.srcset;
+img.sizes = "(max-width: 600px) 100vw, 50vw";
+img.src = responsiveSet.default;
+```
+
+</Accordion>
+
+<Accordion title="How can I ensure images appear while loading or on error?">
+  You can implement progressive loading and fallbacks:
+
+```html
+<img
+  src="https://cdn.visionfly.ai/user123/image.jpg?w=800&f=webp"
+  onerror="this.onerror=null; this.src='https://cdn.visionfly.ai/user123/image.jpg?w=800&f=jpg';"
+  alt="Description"
+  loading="lazy"
+/>
+```
+
+</Accordion>
+
+<Accordion title="Can I use VisionFly with React/Vue/Angular?">
+  Yes, VisionFly can be used with any JavaScript framework. Here's a simple React example:
+
+```jsx
+import { useState, useEffect } from "react";
+import { VisionFly } from "visionfly-sdk";
+
+const visionfly = new VisionFly({
+  apiKey: "your-api-key",
+  apiSecret: "your-api-secret",
+});
+
+function ProductImage({ cdnUrl, width }) {
+  const [optimizedUrl, setOptimizedUrl] = useState(null);
+
+  useEffect(() => {
+    async function loadImage() {
+      try {
+        const url = await visionfly.transformImage({
+          src: cdnUrl,
+          width,
+          format: "webp",
+        });
+        setOptimizedUrl(url);
+      } catch (error) {
+        console.error("Error optimizing image:", error);
+        setOptimizedUrl(cdnUrl); // Fallback to original
+      }
+    }
+
+    loadImage();
+  }, [cdnUrl, width]);
+
+  if (!optimizedUrl) {
+    return (
+      <div
+        className="image-placeholder"
+        style={{ width, height: width * 0.75 }}
+      />
+    );
+  }
+
+  return (
+    <img
+      src={optimizedUrl}
+      alt="Product"
+      width={width}
+      height={width * 0.75}
+      loading="lazy"
+    />
+  );
+}
+```
+
+</Accordion>
+
+## Performance Questions
+
+<Accordion title="How much can VisionFly improve my site's performance?">
+  Customers typically see:
+
+- **30-70% reduction in image file sizes**
+- **40-60% faster page load times**
+- **20-40% improvement in Core Web Vitals scores**
+- **15-25% increase in conversion rates** (for e-commerce)
+
+Results vary based on your existing implementation and content, but our optimization generally provides substantial improvements.
+
+</Accordion>
+
+<Accordion title="Will VisionFly help my SEO?">
+  Yes. VisionFly significantly improves several metrics that directly impact SEO:
+
+- **Core Web Vitals**: Smaller, optimized images improve LCP (Largest Contentful Paint)
+- **Page speed**: Faster pages rank higher in Google search results
+- **Mobile optimization**: Properly sized images for all devices improve mobile rankings
+- **Modern formats**: WebP/AVIF support signals technical excellence to search engines
+
+</Accordion>
+
+<Accordion title="How does caching work with VisionFly?">
+  VisionFly implements a multi-layered caching strategy:
+
+- **CDN edge caching**: Images are cached at our 74+ global edge locations
+- **Browser caching**: Proper cache headers ensure efficient client-side caching
+- **Transformation caching**: Each transformation is cached separately
+- **Origin caching**: Source images are cached for fast transformation
+
+</Accordion>
+
+<Accordion title="How can I track my VisionFly usage?">
+  The VisionFly dashboard provides detailed analytics including:
+
+- Bandwidth usage
+
+</Accordion>
+
+## Billing and Support
+
+<Accordion title="How is VisionFly priced?">
+  VisionFly offers flexible pricing plans based on:
+
+1. **Storage**: How much data you store on our CDN
+2. **Bandwidth**: How much data is transferred to your users
+
+Please visit our [pricing page](https://visionfly.ai/pricing) for detailed information and to calculate your estimated costs.
+
+</Accordion>
+
+<Accordion title="What kind of support do you offer?">
+  We offer various support options depending on your plan:
+
+- **Documentation and tutorials**: Comprehensive guides for self-service
+- **Email support**: Available on all paid plans
+- **Chat support**: Available on Business and Enterprise plans
+- **Dedicated support manager**: Available on Enterprise plans
+- **Implementation assistance**: Available on Enterprise plans
+
+</Accordion>
+
+<Accordion title="Can I migrate from another provider to VisionFly?">
+  Yes, we offer migration assistance to help you smoothly transition from other
+  providers. Our SDK also supports fetching images from external sources,
+  allowing for a gradual migration approach.
+</Accordion>
+
+## Troubleshooting
+
+<Accordion title="My image transformations aren't working. What should I check?">
+  1. **Authentication**: Ensure your API key and secret are correct 2. **URL
+  format**: Verify your source URL is properly encoded 3. **Parameter limits**:
+  Check that values are within allowed ranges 4. **CORS settings**: Ensure your
+  domain is allowed in VisionFly settings 5. **Source image**: Confirm the
+  original image is accessible and valid
+</Accordion>
+
+<Accordion title="How can I reduce my bandwidth usage?">
+  Follow these best practices to minimize bandwidth:
+
+1. **Use responsive images**: Only deliver the size needed for each device
+2. **Enable WebP/AVIF**: Use modern formats for 30-50% smaller files
+3. **Optimize quality**: Use 80-85 quality for most images (rarely go above 90)
+4. **Lazy load**: Only load images when they're about to enter the viewport
+5. **Cache control**: Implement appropriate cache headers
+
+</Accordion>
+
+<Accordion title="I need a feature that isn't currently supported. What can I do?">
+  Contact our support team at hello@visionfly.ai to discuss your requirements.
+  We regularly add new features based on customer feedback and can provide
+  custom solutions for specific needs.
+</Accordion>
+
+<Accordion title="Does VisionFly support WebP and AVIF formats?">
+  Yes, VisionFly supports both WebP and AVIF formats. You can specify the format
+  explicitly, or use `format: "auto"` to let VisionFly automatically deliver the
+  most optimal format based on browser support.
+</Accordion>
+
+---
+
+Still have questions? Contact our support team at hello@visionfly.ai or visit our [documentation](https://docs.visionfly.ai) for more detailed information.
