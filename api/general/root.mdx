@@ -1,0 +1,41 @@
+---
+title: Root Endpoint
+description: Get basic information about the VisionFly API
+openapi: GET /
+---
+
+# Root Endpoint
+
+The root endpoint provides basic information about the VisionFly API. This is a simple endpoint that can be used to verify API connectivity and get basic API information.
+
+## Endpoint
+
+```http
+GET /
+```
+
+## Response
+
+The endpoint returns a 200 OK response with basic API information.
+
+## Example Request
+
+```bash
+curl -X GET https://api.visionfly.ai/
+```
+
+## Example Response
+
+```json
+{
+  "title": "VisionFly API",
+  "description": "Image optimization and transformation API",
+  "version": "1.0.0"
+}
+```
+
+## Use Cases
+
+- API connectivity verification
+- Getting basic API information
+- Health monitoring

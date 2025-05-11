@@ -1,0 +1,48 @@
+---
+title: Health Check
+description: Monitor the health status of the VisionFly API
+openapi: GET /health
+---
+
+# Health Check
+
+The health check endpoint allows you to monitor the operational status of the VisionFly API. This endpoint is particularly useful for system monitoring and uptime checks.
+
+## Endpoint
+
+```http
+GET /health
+```
+
+## Response
+
+The endpoint returns a 200 OK response when the API is healthy and operational.
+
+## Example Request
+
+```bash
+curl -X GET https://api.visionfly.ai/health
+```
+
+## Example Response
+
+```json
+{
+  "status": "healthy",
+  "timestamp": "2024-04-28T12:00:00Z"
+}
+```
+
+## Use Cases
+
+- System monitoring
+- Uptime checks
+- Load balancer health checks
+- Automated monitoring systems
+
+## Best Practices
+
+- Implement regular health checks (e.g., every 30 seconds)
+- Set up alerts for failed health checks
+- Use this endpoint in your monitoring dashboard
+- Consider implementing circuit breakers based on health check results

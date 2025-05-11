@@ -1,0 +1,285 @@
+---
+title: Examples
+description: Practical examples of using the VisionFly API
+---
+
+# API Examples
+
+This page provides practical examples of using the VisionFly API in various scenarios.
+
+## Basic Image Transformation
+
+### 1. Simple Resize
+
+```bash
+# Resize image to 800px width, maintaining aspect ratio
+GET /transform/?src=https://example.com/image.jpg&w=800
+```
+
+### 2. Resize with Quality
+
+```bash
+# Resize to 800x600 with 90% quality
+GET /transform/?src=https://example.com/image.jpg&w=800&h=600&q=90
+```
+
+### 3. Format Conversion
+
+```bash
+# Convert to WebP format
+GET /transform/?src=https://example.com/image.jpg&f=webp
+
+# Convert to AVIF format
+GET /transform/?src=https://example.com/image.jpg&f=avif
+```
+
+## Image Effects
+
+### 1. Basic Effects
+
+```bash
+# Apply blur effect
+GET /transform/?src=https://example.com/image.jpg&blur=10
+
+# Apply sharpening
+GET /transform/?src=https://example.com/image.jpg&sharp=20
+
+# Adjust brightness and contrast
+GET /transform/?src=https://example.com/image.jpg&bri=10&con=20
+```
+
+### 2. Color Adjustments
+
+```bash
+# Adjust saturation
+GET /transform/?src=https://example.com/image.jpg&sat=30
+
+# Rotate hue
+GET /transform/?src=https://example.com/image.jpg&hue=180
+
+# Adjust gamma
+GET /transform/?src=https://example.com/image.jpg&gamma=2.0
+```
+
+## Responsive Images
+
+### 1. Basic Srcset
+
+```bash
+# Generate srcset for responsive images
+GET /generate/srcset?src=https://example.com/image.jpg&w=400,800,1200
+```
+
+### 2. Srcset with Format
+
+```bash
+# Generate WebP srcset
+GET /generate/srcset?src=https://example.com/image.jpg&w=400,800,1200&f=webp
+```
+
+### 3. Srcset with Sizes
+
+```bash
+# Generate srcset with sizes attribute
+GET /generate/srcset?src=https://example.com/image.jpg&w=400,800,1200&sizes=(max-width: 600px) 100vw, 50vw
+```
+
+## Integration Examples
+
+### 1. HTML Integration
+
+```html
+<!-- Basic image -->
+<img
+  src="https://api.visionfly.ai/transform/?src=IMAGE_URL&w=800&q=80"
+  alt="Example Image"
+/>
+
+<!-- Responsive image with srcset -->
+<img
+  srcset="
+    https://api.visionfly.ai/transform/?src=IMAGE_URL&w=400&q=80   400w,
+    https://api.visionfly.ai/transform/?src=IMAGE_URL&w=800&q=80   800w,
+    https://api.visionfly.ai/transform/?src=IMAGE_URL&w=1200&q=80 1200w
+  "
+  sizes="(max-width: 600px) 100vw, 50vw"
+  src="https://api.visionfly.ai/transform/?src=IMAGE_URL&w=800&q=80"
+  alt="Responsive Example"
+/>
+```
+
+### 2. JavaScript Integration
+
+```javascript
+// Basic transformation
+async function transformImage(src, width, quality) {
+  const response = await fetch(
+    `https://api.visionfly.ai/transform/?src=${src}&w=${width}&q=${quality}`
+  );
+  return response.url;
+}
+
+// Generate srcset
+async function generateSrcset(src, widths, quality) {
+  const response = await fetch(
+    `https://api.visionfly.ai/generate/srcset?src=${src}&w=${widths}&q=${quality}`
+  );
+  const data = await response.json();
+  return data.srcset;
+}
+
+// Apply image effects
+async function applyEffects(src, effects) {
+  const params = new URLSearchParams({
+    src,
+    ...effects,
+  });
+  const response = await fetch(`https://api.visionfly.ai/transform/?${params}`);
+  return response.url;
+}
+```
+
+### 3. React Component
+
+```jsx
+import React from "react";
+
+const ResponsiveImage = ({ src, alt, sizes }) => {
+  const widths = [400, 800, 1200];
+  const quality = 80;
+
+  const srcset = widths
+    .map(
+      (width) =>
+        `https://api.visionfly.ai/transform/?src=${src}&w=${width}&q=${quality} ${width}w`
+    )
+    .join(", ");
+
+  return (
+    <img
+      src={`https://api.visionfly.ai/transform/?src=${src}&w=800&q=${quality}`}
+      srcSet={srcset}
+      sizes={sizes}
+      alt={alt}
+    />
+  );
+};
+
+export default ResponsiveImage;
+```
+
+## Error Handling Examples
+
+### 1. Basic Error Handling
+
+```javascript
+async function transformImage(src, width, quality) {
+  try {
+    const response = await fetch(
+      `https://api.visionfly.ai/transform/?src=${src}&w=${width}&q=${quality}`
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message);
+    }
+
+    return response.url;
+  } catch (error) {
+    console.error("Image transformation failed:", error);
+    // Return fallback image
+    return "https://example.com/fallback.jpg";
+  }
+}
+```
+
+### 2. Retry Logic
+
+```javascript
+async function transformImageWithRetry(src, width, quality, maxRetries = 3) {
+  let lastError;
+
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const response = await fetch(
+        `https://api.visionfly.ai/transform/?src=${src}&w=${width}&q=${quality}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return response.url;
+    } catch (error) {
+      lastError = error;
+      // Wait before retrying (exponential backoff)
+      await new Promise((resolve) =>
+        setTimeout(resolve, Math.pow(2, i) * 1000)
+      );
+    }
+  }
+
+  throw lastError;
+}
+```
+
+## Advanced Examples
+
+### 1. Progressive Image Loading
+
+```javascript
+async function loadProgressiveImage(src, width, quality) {
+  // Load low quality image first
+  const lowQualityUrl = await transformImage(src, width, 30);
+
+  // Create image element
+  const img = new Image();
+  img.src = lowQualityUrl;
+
+  // Load high quality image in background
+  const highQualityUrl = await transformImage(src, width, quality);
+  const highQualityImg = new Image();
+  highQualityImg.src = highQualityUrl;
+
+  // Replace with high quality when loaded
+  highQualityImg.onload = () => {
+    img.src = highQualityUrl;
+  };
+
+  return img;
+}
+```
+
+### 2. Image Gallery
+
+```javascript
+class ImageGallery {
+  constructor(container, images) {
+    this.container = container;
+    this.images = images;
+    this.currentIndex = 0;
+  }
+
+  async loadImage(index) {
+    const image = this.images[index];
+    const url = await transformImage(image.src, 1200, 90);
+    return url;
+  }
+
+  async showImage(index) {
+    const url = await this.loadImage(index);
+    this.container.style.backgroundImage = `url(${url})`;
+    this.currentIndex = index;
+  }
+
+  next() {
+    this.showImage((this.currentIndex + 1) % this.images.length);
+  }
+
+  previous() {
+    this.showImage(
+      (this.currentIndex - 1 + this.images.length) % this.images.length
+    );
+  }
+}
+```

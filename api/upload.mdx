@@ -1,0 +1,199 @@
+---
+title: Upload Image
+description: Upload an image to VisionFly's CDN
+openapi: POST /upload
+---
+
+# Upload Image
+
+The upload endpoint allows you to upload images to VisionFly's CDN. Once uploaded, you'll receive a CDN URL that you can use for all subsequent transformations.
+
+## Endpoint
+
+```http
+POST /upload
+```
+
+## Parameters
+
+| Parameter | Type   | Required | Description                     |
+| --------- | ------ | -------- | ------------------------------- |
+| file      | file   | Yes      | The image file to upload        |
+| public_id | string | No       | Custom identifier for the image |
+
+## Headers
+
+| Header    | Required | Description            |
+| --------- | -------- | ---------------------- |
+| X-API-Key | Yes      | Your VisionFly API key |
+
+## Example Requests
+
+### Basic Upload
+
+```bash
+curl -X POST "https://api.visionfly.ai/upload" \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -F "file=@/path/to/your/image.jpg"
+```
+
+### Upload with Public ID
+
+```bash
+curl -X POST "https://api.visionfly.ai/upload?public_id=summer-collection-2024" \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -F "file=@/path/to/your/image.jpg"
+```
+
+## Example Responses
+
+### Successful Upload
+
+```json
+{
+  "success": true,
+  "error": "",
+  "cdn_url": "https://cdn.visionfly.ai/<user_id>/images/your-image.jpg",
+  "size": 12345,
+  "content_type": "image/jpeg"
+}
+```
+
+### Upload with Public ID
+
+```json
+{
+  "success": true,
+  "error": "",
+  "cdn_url": "https://cdn.visionfly.ai/<user_id>/images/summer-collection-2024.jpg",
+  "size": 12345,
+  "content_type": "image/jpeg"
+}
+```
+
+## Error Responses
+
+### 400 Bad Request
+
+```json
+{
+  "type": "request_error",
+  "msg": "No file provided",
+  "status_code": 400
+}
+```
+
+### 401 Unauthorized
+
+```json
+{
+  "type": "unauthorized_error",
+  "msg": "Invalid API key",
+  "status_code": 401
+}
+```
+
+### 413 Payload Too Large
+
+```json
+{
+  "type": "request_error",
+  "msg": "File size exceeds maximum limit",
+  "status_code": 413
+}
+```
+
+### 415 Unsupported Media Type
+
+```json
+{
+  "type": "request_error",
+  "msg": "Unsupported file type",
+  "status_code": 415
+}
+```
+
+## Understanding the Response
+
+The upload endpoint returns a JSON response with the following fields:
+
+- `success`: Boolean indicating if the upload was successful
+- `error`: Error message if any
+- `cdn_url`: The URL where your image is now hosted
+- `size`: Size of the uploaded file in bytes
+- `content_type`: MIME type of the uploaded file
+
+## URL Structure
+
+The CDN URL follows this structure:
+
+```
+https://cdn.visionfly.ai/<user_id>/images/[public_id].format
+```
+
+Where:
+
+- `<user_id>`: Your unique user identifier
+- `[public_id]`: Optional custom identifier if provided, otherwise the original filename
+- `format`: Original file format (jpg, png, etc.)
+
+## Best Practices
+
+1. **File Size**
+
+   - Keep file sizes reasonable (recommended under 10MB)
+   - Consider compressing large images before upload
+
+2. **File Types**
+
+   - Supported formats: JPEG, PNG, WebP, AVIF
+   - Use appropriate formats for your use case
+
+3. **Public ID Usage**
+
+   - Use meaningful identifiers for your images
+   - Consider using a consistent naming pattern
+   - Avoid special characters in public IDs
+
+4. **Error Handling**
+
+   - Always check the `success` field in the response
+   - Handle all possible error cases
+   - Implement retry logic for transient failures
+
+5. **Security**
+   - Never expose your API key in client-side code
+   - Use server-side uploads for sensitive images
+   - Validate file types and sizes before upload
+
+## Use Cases
+
+- Product image uploads
+- User profile pictures
+- Content management systems
+- Media libraries
+- Asset management
+
+## SDK Examples
+
+### JavaScript/TypeScript
+
+```typescript
+import { VisionFly } from "visionfly-sdk";
+
+const visionfly = new VisionFly({
+  apiKey: "YOUR_API_KEY",
+  apiSecret: "YOUR_API_SECRET",
+});
+
+// Basic upload
+const result = await visionfly.upload({
+  file: new File(["..."], "image.jpg"),
+});
+
+// Upload with public ID
+const resultWithId = await visionfly.upload({
+  file: new File(["..."], "image.jpg"),
+  public_id: "summer-collection-2024",
+});
+```

@@ -1,0 +1,108 @@
+---
+title: Parameters
+description: Detailed explanation of all VisionFly API parameters
+---
+
+# API Parameters
+
+This page explains all the parameters available in the VisionFly API for image transformation and optimization.
+
+## Transform Parameters
+
+### Required Parameters
+
+| Parameter | Type   | Description                   | Example                         |
+| --------- | ------ | ----------------------------- | ------------------------------- |
+| `src`     | string | Source image URL to transform | `https://example.com/image.jpg` |
+
+### Optional Parameters
+
+#### Dimensions
+
+| Parameter | Type    | Description      | Default | Range  |
+| --------- | ------- | ---------------- | ------- | ------ |
+| `w`       | integer | Width in pixels  | 1280    | 1-4200 |
+| `h`       | integer | Height in pixels | 720     | 1-4200 |
+
+#### Quality and Format
+
+| Parameter | Type    | Description     | Default | Range                       |
+| --------- | ------- | --------------- | ------- | --------------------------- |
+| `q`       | integer | Quality (1-100) | 80      | 1-100                       |
+| `f`       | string  | Output format   | auto    | auto/webp/avif/jpeg/jpg/png |
+
+#### Image Effects
+
+| Parameter | Type    | Description            | Default | Range       |
+| --------- | ------- | ---------------------- | ------- | ----------- |
+| `blur`    | number  | Gaussian blur strength | 0       | 0-100       |
+| `sharp`   | number  | Sharpen strength       | 0       | 0-100       |
+| `bri`     | integer | Brightness adjustment  | 0       | -100 to 100 |
+| `con`     | integer | Contrast adjustment    | 0       | -100 to 100 |
+| `sat`     | integer | Saturation adjustment  | 0       | -100 to 100 |
+| `hue`     | integer | Hue rotation           | 0       | 0-360       |
+| `gamma`   | number  | Gamma adjustment       | 2.2     | 1.0-3.0     |
+
+## Srcset Generation Parameters
+
+### Required Parameters
+
+| Parameter | Type   | Description      | Example                         |
+| --------- | ------ | ---------------- | ------------------------------- |
+| `src`     | string | Source image URL | `https://example.com/image.jpg` |
+
+### Optional Parameters
+
+| Parameter | Type    | Description                 | Example                          |
+| --------- | ------- | --------------------------- | -------------------------------- |
+| `w`       | string  | Comma-separated widths      | `400,800,1200`                   |
+| `f`       | string  | Output format               | `webp`                           |
+| `q`       | integer | Quality (1-100)             | `80`                             |
+| `sizes`   | string  | Sizes attribute for img tag | `(max-width: 600px) 100vw, 50vw` |
+
+## Parameter Examples
+
+### Basic Image Transformation
+
+```bash
+GET /transform/?src=https://example.com/image.jpg&w=800&h=600&q=90
+```
+
+### Image with Effects
+
+```bash
+GET /transform/?src=https://example.com/image.jpg&w=800&h=600&blur=5&bri=10&con=20
+```
+
+### Srcset Generation
+
+```bash
+GET /generate/srcset?src=https://example.com/image.jpg&w=400,800,1200&f=webp&q=80
+```
+
+## Best Practices
+
+1. **Image Dimensions**
+
+   - Always specify at least one dimension (width or height)
+   - Use aspect ratio preservation when possible
+   - Consider device pixel ratios for responsive images
+
+2. **Quality Settings**
+
+   - Use quality 80-90 for most web images
+   - Lower quality (60-70) for thumbnails
+   - Higher quality (90-100) for high-resolution displays
+
+3. **Format Selection**
+
+   - Use `auto` for automatic format selection
+   - Prefer `webp` for modern browsers
+   - Use `avif` for high-quality images
+   - Fallback to `jpeg` for older browsers
+
+4. **Effects Usage**
+   - Use blur sparingly (0-20 range)
+   - Apply sharpening carefully (0-30 range)
+   - Make subtle adjustments to brightness/contrast (-20 to 20)
+   - Use gamma correction for display calibration

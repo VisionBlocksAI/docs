@@ -1,0 +1,118 @@
+---
+title: API Types and Schemas
+description: Detailed documentation of VisionFly API types and schemas
+---
+
+# API Types and Schemas
+
+This document provides detailed information about the types and schemas used in the VisionFly API.
+
+## VFTransformResponse
+
+Response model for image transformation operations.
+
+### Properties
+
+| Property     | Type    | Description                                         | Example                                                    |
+| ------------ | ------- | --------------------------------------------------- | ---------------------------------------------------------- |
+| success      | boolean | Indicates whether the transformation was successful | `true`                                                     |
+| error        | string  | Error message if the transformation failed          | `"Invalid input image"`                                    |
+| public_url   | string  | Public URL of the transformed image                 | `"https://cdn.visionfly.ai/images/transformed_image.webp"` |
+| size         | number  | Size of the transformed image in bytes              | `302.5`                                                    |
+| content_type | string  | MIME type of the transformed image                  | `"image/webp"`                                             |
+
+### Example
+
+```json
+{
+  "success": true,
+  "error": "",
+  "public_url": "https://cdn.visionfly.ai/images/transformed_image.webp",
+  "size": 302.5,
+  "content_type": "image/webp"
+}
+```
+
+## VFGenerateSrcSetsResponse
+
+Response model for generating responsive image source sets.
+
+### Properties
+
+| Property | Type   | Description                                                     | Example                                                                                                      |
+| -------- | ------ | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| srcset   | string | Comma-separated list of image URLs with their respective widths | `"https://cdn.visionfly.ai/images/image_400.webp 400w, https://cdn.visionfly.ai/images/image_800.webp 800w"` |
+| sizes    | string | Sizes attribute for responsive images                           | `"(max-width: 1200px) 100vw, 1200px"`                                                                        |
+| default  | string | Default image URL to use when srcset is not supported           | `"https://cdn.visionfly.ai/images/image_800.webp"`                                                           |
+
+### Example
+
+```json
+{
+  "srcset": "https://cdn.visionfly.ai/images/image_400.webp 400w, https://cdn.visionfly.ai/images/image_800.webp 800w, https://cdn.visionfly.ai/images/image_1200.webp 1200w",
+  "sizes": "(max-width: 1200px) 100vw, 1200px",
+  "default": "https://cdn.visionfly.ai/images/image_800.webp"
+}
+```
+
+## VFExceptionResponse
+
+Standardized exception response model for VisionFly API errors.
+
+### Properties
+
+| Property    | Type    | Description                               | Example                      |
+| ----------- | ------- | ----------------------------------------- | ---------------------------- |
+| type        | string  | Type of VisionFly exception that occurred | `"server_error"`             |
+| msg         | string  | Human-readable error message              | `"Incorrect URL parameters"` |
+| status_code | integer | HTTP status code for the error            | `500`                        |
+
+### Example
+
+```json
+{
+  "type": "request_error",
+  "msg": "Incorrect URL parameters",
+  "status_code": 400
+}
+```
+
+## VFImageFormat
+
+Supported image formats for VisionFly image processing operations.
+
+### Values
+
+| Format | Description                                                   |
+| ------ | ------------------------------------------------------------- |
+| auto   | Automatically select the best format based on browser support |
+| webp   | WebP format (modern, efficient)                               |
+| avif   | AVIF format (next-generation)                                 |
+| jpeg   | JPEG format (widely supported)                                |
+| jpg    | Alias for JPEG                                                |
+| png    | PNG format (lossless)                                         |
+
+## VFExceptionType
+
+Enumeration of different types of exceptions that can occur in the VisionFly API.
+
+### Values
+
+| Type                   | Description                           |
+| ---------------------- | ------------------------------------- |
+| image_processing_error | Error during image processing         |
+| api_key_error          | Authentication or authorization error |
+| server_error           | Internal server error                 |
+| request_error          | Invalid request parameters            |
+
+## VFErrorMsgs
+
+Enumeration of standard error messages used across the VisionFly API.
+
+### Values
+
+| Message                                                                             | Description                       |
+| ----------------------------------------------------------------------------------- | --------------------------------- |
+| Incorrect URL parameters                                                            | Invalid or missing URL parameters |
+| Invalid width parameter provided                                                    | Width parameter is invalid        |
+| Invalid url provided. Make sure url starts with https and is hosted on visionfly.ai | Invalid source URL format         |

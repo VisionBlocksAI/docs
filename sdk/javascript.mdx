@@ -1,0 +1,295 @@
+---
+title: JavaScript SDK
+description: Official JavaScript SDK for VisionFly API
+---
+
+# VisionFly JavaScript SDK
+
+The VisionFly JavaScript SDK makes it easy to integrate image optimization and transformation capabilities into your web applications.
+
+## Installation
+
+```bash
+npm install visionfly-sdk
+# or
+yarn add visionfly-sdk
+```
+
+[View on GitHub](https://github.com/VisionBlocksAI/visionfly-sdk)
+
+## Quick Start
+
+```javascript
+import { VisionFly } from "visionfly/sdk";
+
+const visionfly = new VisionFly({
+  apiKey: "YOUR_API_KEY",
+  apiSecret: "YOUR_API_SECRET",
+});
+
+// First, upload an image
+const uploadResult = await visionfly.upload({
+  file: new File(["..."], "example.jpg"),
+});
+
+// Now use the CDN URL for transformations
+const transformedImage = await visionfly.transform({
+  src: uploadResult.cdn_url,
+  width: 800,
+  height: 600,
+  quality: 90,
+  format: "webp",
+});
+
+// Generate responsive images using the CDN URL
+const responsiveImages = await visionfly.generateSrcset({
+  src: uploadResult.cdn_url,
+  widths: [400, 800, 1200],
+  format: "webp",
+  quality: 90,
+});
+```
+
+## Configuration
+
+```javascript
+const visionfly = new VisionFly({
+  apiKey: "YOUR_API_KEY",
+  apiSecret: "YOUR_API_SECRET",
+  baseUrl: "https://api.visionfly.ai", // optional
+  timeout: 30000, // optional, default: 30000ms
+  retries: 3, // optional, default: 3
+});
+```
+
+## Global CDN Performance
+
+VisionFly's global CDN delivers your images with exceptional performance and reliability:
+
+### Performance Statistics
+
+- **Global Edge Network**: 100+ locations worldwide
+- **Average Response Time**: < 50ms
+- **Cache Hit Ratio**: 99.9%
+- **Uptime**: 99.99%
+
+### CDN Features
+
+- **Smart Caching**: Automatic cache optimization for frequently accessed images
+- **HTTP/3 Support**: Latest protocol for faster image delivery
+- **TLS 1.3**: Enhanced security with modern encryption
+- **Real-time Analytics**: Monitor CDN performance in your dashboard
+
+### CDN URL Structure
+
+```
+https://cdn.visionfly.ai/<user_id>/images/<filename>
+```
+
+Example:
+
+```
+https://cdn.visionfly.ai/12345/images/product-1.jpg
+```
+
+### CDN Benefits
+
+1. **Faster Loading**: Images are served from the edge location closest to your users
+2. **Reduced Bandwidth**: Smart caching reduces origin server load
+3. **Better SEO**: Fast image loading improves Core Web Vitals
+4. **Global Reach**: Consistent performance worldwide
+
+## Image Upload
+
+```javascript
+// Basic upload
+const result = await visionfly.upload({
+  file: new File(["..."], "example.jpg"),
+});
+
+// Upload with custom public ID
+const resultWithId = await visionfly.upload({
+  file: new File(["..."], "example.jpg"),
+  public_id: "summer-collection-2024",
+});
+
+// The response contains the CDN URL
+console.log(result.cdn_url); // https://cdn.visionfly.ai/<user_id>/images/example.jpg
+```
+
+## Image Transformation
+
+```javascript
+// Basic transformation using uploaded image
+const result = await visionfly.transform({
+  src: "https://cdn.visionfly.ai/<user_id>/images/example.jpg",
+  width: 800,
+  height: 600,
+});
+
+// Advanced transformation with filters
+const result = await visionfly.transform({
+  src: "https://cdn.visionfly.ai/<user_id>/images/example.jpg",
+  width: 800,
+  height: 600,
+  quality: 90,
+  format: "webp",
+  blur: 5,
+  sharp: 10,
+  brightness: 10,
+  contrast: 5,
+  saturation: 5,
+  hue: 180,
+  gamma: 2.2,
+});
+```
+
+## Responsive Images
+
+```javascript
+// Generate srcset using uploaded image
+const result = await visionfly.generateSrcset({
+  src: "https://cdn.visionfly.ai/<user_id>/images/example.jpg",
+  widths: [400, 800, 1200],
+  format: "webp",
+  quality: 90,
+  sizes: "(max-width: 1200px) 100vw, 1200px",
+});
+
+// Use in HTML
+const img = document.createElement("img");
+img.srcset = result.srcset;
+img.sizes = result.sizes;
+img.src = result.default;
+img.alt = "Responsive image";
+```
+
+## Error Handling
+
+```javascript
+try {
+  // First upload the image
+  const uploadResult = await visionfly.upload({
+    file: new File(["..."], "example.jpg"),
+  });
+
+  // Then transform it
+  const result = await visionfly.transform({
+    src: uploadResult.cdn_url,
+    width: 800,
+  });
+} catch (error) {
+  if (error.type === "request_error") {
+    console.error("Invalid request:", error.msg);
+  } else if (error.type === "image_processing_error") {
+    console.error("Image processing failed:", error.msg);
+  } else {
+    console.error("Unexpected error:", error);
+  }
+}
+```
+
+## Best Practices
+
+1. **Authentication**
+
+   - Store API key and secret securely
+   - Use environment variables for configuration
+   - Never expose credentials in client-side code
+
+2. **Error Handling**
+
+   - Always implement proper error handling
+   - Use try-catch blocks for async operations
+   - Handle different error types appropriately
+
+3. **Performance**
+
+   - Cache transformed images when possible
+   - Use appropriate image formats (WebP for modern browsers)
+   - Implement lazy loading for images
+
+4. **Responsive Images**
+
+   - Choose appropriate width breakpoints
+   - Consider device pixel ratios
+   - Use meaningful sizes attributes
+
+5. **Security**
+   - Use server-side uploads for sensitive images
+   - Implement proper CORS policies
+   - Validate file types and sizes before upload
+
+## API Reference
+
+### VisionFly Class
+
+```typescript
+class VisionFly {
+  constructor(config: {
+    apiKey: string;
+    apiSecret: string;
+    baseUrl?: string;
+    timeout?: number;
+    retries?: number;
+  });
+
+  upload(options: UploadOptions): Promise<UploadResponse>;
+  transform(options: TransformOptions): Promise<TransformResponse>;
+  generateSrcset(options: SrcsetOptions): Promise<SrcsetResponse>;
+}
+```
+
+### Types
+
+```typescript
+interface UploadOptions {
+  file: File;
+  public_id?: string;
+}
+
+interface UploadResponse {
+  success: boolean;
+  error: string;
+  cdn_url: string;
+  size: number;
+  content_type: string;
+}
+
+interface TransformOptions {
+  src: string;
+  width?: number;
+  height?: number;
+  quality?: number;
+  format?: "auto" | "webp" | "avif" | "jpeg" | "jpg" | "png";
+  blur?: number;
+  sharp?: number;
+  brightness?: number;
+  contrast?: number;
+  saturation?: number;
+  hue?: number;
+  gamma?: number;
+}
+
+interface TransformResponse {
+  success: boolean;
+  error: string;
+  public_url: string;
+  size: number;
+  content_type: string;
+}
+
+interface SrcsetOptions {
+  src: string;
+  widths: number[];
+  format?: string;
+  quality?: number;
+  sizes?: string;
+}
+
+interface SrcsetResponse {
+  srcset: string;
+  sizes: string;
+  default: string;
+}
+```

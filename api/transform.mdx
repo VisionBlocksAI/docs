@@ -1,0 +1,90 @@
+---
+title: Transform Image
+description: Transform and optimize images with various operations
+authMethod: "key"
+openapi: GET /transform
+---
+
+# Transform Image
+
+The transform endpoint allows you to perform various image transformations and optimizations. You can resize, adjust quality, apply filters, and convert image formats.
+
+## Endpoint
+
+```http
+GET /transform/
+```
+
+## Parameters
+
+| Parameter | Type    | Required | Description            | Default | Range                            |
+| --------- | ------- | -------- | ---------------------- | ------- | -------------------------------- |
+| src       | string  | Yes      | VisionFly CDN URL      | -       | -                                |
+| w         | integer | No       | Width in pixels        | 1280    | 1-4200                           |
+| h         | integer | No       | Height in pixels       | 720     | 1-4200                           |
+| q         | integer | No       | Quality (1-100)        | 80      | 1-100                            |
+| f         | string  | No       | Output format          | auto    | auto, webp, avif, jpeg, jpg, png |
+| blur      | number  | No       | Gaussian blur strength | 0       | 0-100                            |
+| sharp     | number  | No       | Sharpen strength       | 0       | 0-100                            |
+| bri       | integer | No       | Brightness adjustment  | 0       | -100 to 100                      |
+| con       | integer | No       | Contrast adjustment    | 0       | -100 to 100                      |
+| sat       | integer | No       | Saturation adjustment  | 0       | -100 to 100                      |
+| hue       | integer | No       | Hue rotation           | 0       | 0-360                            |
+| gamma     | number  | No       | Gamma adjustment       | 2.2     | 1.0-3.0                          |
+
+## Example Request
+
+```bash
+curl -X GET "https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/<user_id>/example.jpg&w=800&h=600&q=90&f=webp&bri=10&con=5"
+```
+
+## Example Response
+
+```json
+{
+  "success": true,
+  "error": "",
+  "public_url": "https://cdn.visionfly.ai/<user_id>/example&w=800&h=600&q=90&f=webp&bri=10&con=5.webp",
+  "size": 302.5,
+  "content_type": "image/webp"
+}
+```
+
+## Error Responses
+
+### 400 Bad Request
+
+```json
+{
+  "type": "request_error",
+  "msg": "Incorrect URL parameters",
+  "status_code": 400
+}
+```
+
+### 422 Unprocessable Entity
+
+```json
+{
+  "type": "image_processing_error",
+  "msg": "Invalid width parameter provided",
+  "status_code": 422
+}
+```
+
+## Use Cases
+
+- Image resizing and optimization
+- Format conversion
+- Image enhancement
+- Applying filters and effects
+- Creating thumbnails
+- Optimizing images for web delivery
+
+## Best Practices
+
+- Always use HTTPS URLs for the source image
+- Optimize image quality based on use case
+- Use appropriate image formats (WebP for modern browsers)
+- Consider implementing caching for transformed images
+- Monitor image transformation performance

@@ -1,63 +1,194 @@
 ---
-title: "VisionFly API"
-description: "Developer friendly image processing API"
+title: Introduction
+description: Next-generation image optimization and transformation API
 ---
 
-# VisionFly API
+# VisionFly: The Future of Image Optimization
 
-VisionFly API is a secure, privacy-focused image processing solution that enables developers to transform images without persistent storage. Our API provides powerful image manipulation capabilities through a simple, intuitive URL-based interface.
+VisionFly is a powerful, developer-friendly image optimization and transformation API that helps you deliver the perfect image to every user, on every device. Built for modern web applications, VisionFly combines cutting-edge image processing with an intuitive API to give you complete control over your images.
 
-## Key Benefits
+## Why Choose VisionFly?
 
-<CardGroup cols={2}>
-  <Card title="Privacy-First" icon="shield-check">
-    Images processed with VisionFly are never stored permanently on our servers
-  </Card>
-  <Card title="Developer-Friendly" icon="code">
-    Simple, intuitive API designed for developers, with clean documentation
-  </Card>
-  <Card title="Fast Processing" icon="bolt">
-    Optimized for speed with minimal latency and parallel processing
-  </Card>
-  <Card title="Transparent Pricing" icon="money-bill">
-    Clear, predictable pricing with no hidden costs or surprises
-  </Card>
-</CardGroup>
+### 🚀 Superior Performance
 
-## Features
+- **Lightning-fast processing**: Optimize and transform images in milliseconds
+- **Global CDN**: Deliver images from the edge with sub-50ms latency
+- **Automatic format selection**: Serve the best format for each browser (WebP, AVIF, JPEG)
+- **Intelligent caching**: Smart caching strategies to minimize processing time
 
-VisionFly API offers a comprehensive set of image transformation options:
+### 🌍 Global CDN Network
 
-- **Resize** - Change image dimensions while maintaining aspect ratio
-- **Format Conversion** - Convert between formats (JPG, PNG, WebP)
-- **Quality Adjustments** - Control compression quality to optimize file size
-- **Cropping** - Precise or smart cropping of images
-- **Visual Adjustments** - Modify brightness, contrast, and saturation
-- **More to Come** - Regular updates with new features based on developer feedback
+Our global CDN network ensures your images are delivered with exceptional performance:
+
+| Metric                | Value          |
+| --------------------- | -------------- |
+| Edge Locations        | 100+ worldwide |
+| Average Response Time | < 50ms         |
+| Cache Hit Ratio       | 99.9%          |
+| Uptime                | 99.99%         |
+
+**Key CDN Features:**
+
+- HTTP/3 support for faster delivery
+- TLS 1.3 encryption
+- Real-time analytics
+- Smart caching optimization
+- Automatic failover
+
+### 💰 Cost-Effective
+
+- **Pay-per-use pricing**: Only pay for what you use, no hidden fees
+- **Competitive rates**: Up to 50% cheaper than alternatives
+- **Free tier**: 1,000 transformations per month
+- **Volume discounts**: Save more as you grow
+
+### 🛠️ Developer Experience
+
+- **Simple REST API**: Intuitive endpoints with clear documentation
+- **Multiple SDKs**: Official SDKs for JavaScript, Python, Ruby, and more
+- **Real-time transformations**: Transform images on-the-fly with URL parameters
+- **Responsive images**: Generate srcsets with a single API call
+
+### 🔒 Enterprise-Grade
+
+- **99.99% uptime**: Industry-leading reliability
+- **SOC 2 compliant**: Enterprise-grade security
+- **Dedicated support**: Priority support for enterprise customers
+- **Custom solutions**: Tailored solutions for your specific needs
+
+## Key Features
+
+### Image Optimization
+
+- **Automatic compression**: Reduce file size without quality loss
+- **Smart cropping**: AI-powered content-aware cropping
+- **Format optimization**: Serve the best format for each browser
+- **Quality control**: Fine-tune compression settings
+
+### Image Transformation
+
+- **Resize and crop**: Precise control over dimensions
+- **Effects and filters**: Apply professional-grade effects
+- **Color adjustments**: Modify brightness, contrast, and more
+- **Watermarking**: Add text or image watermarks
+
+### Responsive Images
+
+- **Srcset generation**: Create responsive image sets
+- **Art direction**: Serve different images for different viewports
+- **Device detection**: Optimize for specific devices
+- **Lazy loading**: Improve page load performance
 
 ## Getting Started
 
-To start using VisionFly API, you'll need:
+1. **Sign up**: Create your VisionFly account
+2. **Get your API key**: Find it in your dashboard
+3. **Choose your integration method**:
+   - Use our REST API
+   - Install an SDK
+   - Use our WordPress plugin
+   - Use our Shopify app
 
-1. An API key (sign up at [dashboard.visionfly.ai](https://dashboard.visionfly.ai))
-2. Understanding of the basic URL structure
-3. Knowledge of available transformation parameters
-
-Continue to the [Quick Start](/api-reference/quick-start) guide to send your first request, or explore our [API Reference](/api-reference/endpoints) for detailed information.
+## Quick Example
 
 ```javascript
-// Example: Resizing an image
-fetch(
-  "https://api.visionfly.ai/v1/transform/w800-h600-webp/example.com/image.jpg",
-  {
-    headers: {
-      "VF-API-Key": "your-api-key",
-    },
-  }
-)
-  .then((response) => response.blob())
-  .then((imageBlob) => {
-    const imageUrl = URL.createObjectURL(imageBlob);
-    document.getElementById("result").src = imageUrl;
-  });
+// Initialize the VisionFly client
+const visionfly = new VisionFly({
+  apiKey: "YOUR_API_KEY",
+  apiSecret: "YOUR_API_SECRET",
+});
+
+// 1. Upload an image
+const uploadResult = await visionfly.upload({
+  file: new File(["..."], "product-image.jpg"),
+  public_id: "summer-collection-2024",
+});
+
+// 2. Transform the image
+const transformedImage = await visionfly.transform({
+  src: uploadResult.cdn_url,
+  width: 800,
+  height: 600,
+  quality: 90,
+  format: "webp",
+  blur: 5,
+  brightness: 10,
+});
+
+// 3. Generate responsive images
+const responsiveImages = await visionfly.generateSrcset({
+  src: uploadResult.cdn_url,
+  widths: [400, 800, 1200],
+  format: "webp",
+  quality: 90,
+  sizes: "(max-width: 1200px) 100vw, 1200px",
+});
+
+// 4. Use in your HTML
+<img
+  srcSet={responsiveImages.srcset}
+  sizes={responsiveImages.sizes}
+  src={responsiveImages.default}
+  alt="Summer Collection 2024"
+  loading="lazy"
+/>;
 ```
+
+This example demonstrates:
+
+- Image upload with custom public ID
+- Image transformation with quality and effects
+- Responsive image generation with multiple sizes
+- Modern HTML implementation with lazy loading
+
+## Migration Guide
+
+Switching from another service? We make it easy:
+
+- **From Cloudinary**: Use our migration tool to transfer your images
+- **From TinyPNG**: Our API is compatible with most TinyPNG workflows
+- **From Sirv**: Similar URL-based transformation syntax
+
+## Support
+
+- **Documentation**: Comprehensive guides and examples
+- **Community**: Join our Discord community
+- **Support**: Email hello@visionfly.ai
+- **Status**: Check our status page for uptime
+
+Ready to get started? [Sign up now](https://visionfly.ai/) or [contact sales](mailto:hello@visionfly.ai) for enterprise solutions.
+
+# VisionFly Documentation
+
+## Modern Image Optimization & Transformation API
+
+VisionFly is a powerful API for image optimization, transformation, and delivery. It helps developers deliver faster websites with optimized images, improve SEO, and provide the best user experience across all devices.
+
+### Key Features
+
+- **Advanced Image Optimization** - Automatically convert images to modern formats like WebP and AVIF for smaller file sizes without quality loss
+- **Comprehensive Transformations** - Resize, crop, adjust quality, apply filters, and more with a simple API
+- **Lightning-Fast CDN** - Global content delivery network ensures images load quickly for users worldwide
+- **Responsive Images** - Generate responsive srcsets for optimal display across all devices
+- **Developer-Friendly SDKs** - Easy integration with JavaScript, React, and Next.js applications
+- **Secure by Design** - JWT authentication, secure uploading, and granular access controls
+
+### Why VisionFly?
+
+- **Improve Core Web Vitals** - Speed up your site with optimized images
+- **Reduce Bandwidth Costs** - Smaller image files mean lower hosting and bandwidth costs
+- **Boost SEO Rankings** - Faster sites rank higher in search results
+- **Simplify Development** - No need for complex image processing pipelines
+- **Modern Format Support** - Automatic WebP and AVIF conversion for browsers that support them
+
+Ready to get started? Check out our [Quick Start Guide](/quickstart).
+
+---
+
+## Latest Updates
+
+**Version 1.0.0 Released** - Our initial public release includes all core functionality, SDKs for JavaScript and React, and Next.js integration.
+
+## Getting Help
+
+If you need assistance, check out our [FAQs](/faqs) or [contact support](/support).

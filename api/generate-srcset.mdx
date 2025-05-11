@@ -1,0 +1,138 @@
+---
+title: Generate Srcset
+description: Generate responsive image source sets for optimal web delivery
+openapi: GET /generate/srcset
+---
+
+# Generate Srcset
+
+The srcset generation endpoint helps you create responsive image source sets, which are essential for delivering optimized images across different devices and screen sizes.
+
+## Endpoint
+
+```http
+GET /generate/srcset
+```
+
+## Parameters
+
+| Parameter | Type    | Required | Description                      | Default |
+| --------- | ------- | -------- | -------------------------------- | ------- |
+| src       | string  | Yes      | Source image URL                 | -       |
+| w         | string  | No       | Comma-separated list of widths   | -       |
+| f         | string  | No       | Output format                    | auto    |
+| q         | integer | No       | Quality (1-100)                  | 80      |
+| sizes     | string  | No       | Sizes attribute for `<img/>` tag | -       |
+
+## Example Requests
+
+### Basic Request
+
+```bash
+curl -X GET "https://api.visionfly.ai/generate/srcset?src=https://cdn.visionfly.ai/<user_id>/example.jpg&w=400,800,1200"
+```
+
+### Request with Format and Quality
+
+```bash
+curl -X GET "https://api.visionfly.ai/generate/srcset?src=https://cdn.visionfly.ai/<user_id>/example.jpg&w=400,800,1200&f=webp&q=90"
+```
+
+## Example Responses
+
+### Basic Response
+
+```json
+{
+  "srcset": "https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/<user_id>/example.jpg&w=400&f=auto&q=80 400w, https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/<user_id>/example.jpg&w=800&f=auto&q=80 800w, https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/<user_id>/example.jpg&w=1200&f=auto&q=80 1200w",
+  "sizes": "(max-width: 1200px) 100vw, 1200px",
+  "default": "https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/<user_id>/example.jpg&w=800&f=auto&q=80"
+}
+```
+
+### Response with Custom Sizes
+
+```json
+{
+  "srcset": "https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/<user_id>/example.jpg&w=400&f=auto&q=80 400w, https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/<user_id>/example.jpg&w=800&f=auto&q=80 800w, https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/<user_id>/example.jpg&w=1200&f=auto&q=80 1200w",
+  "sizes": "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+  "default": "https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/<user_id>/example.jpg&w=800&f=auto&q=80"
+}
+```
+
+## HTML Implementation
+
+### Basic Implementation
+
+[VisionFly](https://www.visionfly.ai) supports generating responsive images for HTML to optimize delivery across different device sizes. This can be achieved by:
+
+1. Making a request to the `/generate/srcset` endpoint to get optimized image URLs at various widths
+2. Using the JSON response to populate the `srcset`, `sizes`, and `src` attributes of your `<img>` tag
+3. Implementing the responsive image in your HTML as shown in the example below
+
+```html
+<img
+  srcset="
+    https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/<user_id>/example.jpg&w=400&f=auto&q=80   400w,
+    https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/<user_id>/example.jpg&w=800&f=auto&q=80   800w,
+    https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/<user_id>/example.jpg&w=1200&f=auto&q=80 1200w
+  "
+  sizes="(max-width: 1200px) 100vw, 1200px"
+  src="https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/<user_id>/example.jpg&w=800&f=auto&q=80"
+  alt="Responsive image example"
+/>
+```
+
+### Implementation with Custom Sizes
+
+```html
+<img
+  srcset="
+    https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/<user_id>/example.jpg&w=400&f=auto&q=80   400w,
+    https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/<user_id>/example.jpg&w=800&f=auto&q=80   800w,
+    https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/<user_id>/example.jpg&w=1200&f=auto&q=80 1200w
+  "
+  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+  src="https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/<user_id>/example.jpg&w=800&f=auto&q=80"
+  alt="Responsive image example"
+/>
+```
+
+## Error Responses
+
+### 400 Bad Request
+
+```json
+{
+  "type": "request_error",
+  "msg": "Incorrect URL parameters",
+  "status_code": 400
+}
+```
+
+### 422 Unprocessable Entity
+
+```json
+{
+  "type": "image_processing_error",
+  "msg": "Invalid url provided. Make sure url starts with https and is hosted on visionfly.ai",
+  "status_code": 422
+}
+```
+
+## Use Cases
+
+- Responsive web design
+- Optimizing images for different screen sizes
+- Reducing bandwidth usage
+- Improving page load performance
+- Supporting high-DPI displays
+
+## Best Practices
+
+- Use appropriate width breakpoints for your design
+- Consider device pixel ratios
+- Implement proper caching strategies
+- Monitor image performance
+- Use modern image formats (WebP, AVIF)
+- Test across different devices and network conditions

@@ -1,0 +1,789 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "VisionFly API",
+    "description": "Image optimization and transformation API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/transform/health": {
+      "get": {
+        "tags": ["General"],
+        "summary": "Health Check",
+        "description": "Health check endpoint for monitoring",
+        "operationId": "health_check_transform_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          }
+        }
+      }
+    },
+    "/transform": {
+      "get": {
+        "tags": ["Transform"],
+        "summary": "Transform",
+        "description": "Transform an image from a URL with various operations.\nReturns the transformed image directly.",
+        "operationId": "transform_transform_get",
+        "security": [{ "APIKeyHeader": [] }],
+        "parameters": [
+          {
+            "name": "src",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "VisionFly CDN url",
+              "title": "Src"
+            },
+            "description": "VisionFly CDN url"
+          },
+          {
+            "name": "w",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 4200,
+              "exclusiveMinimum": 0,
+              "description": "Width in pixels",
+              "default": 1280,
+              "title": "W"
+            },
+            "description": "Width in pixels"
+          },
+          {
+            "name": "h",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 4200,
+              "exclusiveMinimum": 0,
+              "description": "Height in pixels",
+              "default": 720,
+              "title": "H"
+            },
+            "description": "Height in pixels"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "Quality (1-100)",
+              "default": 80,
+              "title": "Q"
+            },
+            "description": "Quality (1-100)"
+          },
+          {
+            "name": "f",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/VFImageFormat",
+              "description": "Output format",
+              "default": "auto"
+            },
+            "description": "Output format"
+          },
+          {
+            "name": "blur",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "maximum": 100,
+              "minimum": 0,
+              "description": "Gaussian blur strength (0-100)",
+              "default": 0,
+              "title": "Blur"
+            },
+            "description": "Gaussian blur strength (0-100)"
+          },
+          {
+            "name": "sharp",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "maximum": 100,
+              "minimum": 0,
+              "description": "Sharpen strength (0-100)",
+              "default": 0,
+              "title": "Sharp"
+            },
+            "description": "Sharpen strength (0-100)"
+          },
+          {
+            "name": "bri",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": -100,
+              "description": "Brightness adjustment (-100 to 100)",
+              "default": 0,
+              "title": "Bri"
+            },
+            "description": "Brightness adjustment (-100 to 100)"
+          },
+          {
+            "name": "con",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": -100,
+              "description": "Contrast adjustment (-100 to 100)",
+              "default": 0,
+              "title": "Con"
+            },
+            "description": "Contrast adjustment (-100 to 100)"
+          },
+          {
+            "name": "sat",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": -100,
+              "description": "Saturation adjustment (-100 to 100)",
+              "default": 0,
+              "title": "Sat"
+            },
+            "description": "Saturation adjustment (-100 to 100)"
+          },
+          {
+            "name": "hue",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 360,
+              "minimum": 0,
+              "description": "Hue rotation (0-360)",
+              "default": 0,
+              "title": "Hue"
+            },
+            "description": "Hue rotation (0-360)"
+          },
+          {
+            "name": "gamma",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "maximum": 3.0,
+              "minimum": 1.0,
+              "description": "Gamma adjustment (1.0-3.0)",
+              "default": 2.2,
+              "title": "Gamma"
+            },
+            "description": "Gamma adjustment (1.0-3.0)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/VFTransformResponse" }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VFExceptionResponse_400"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VFExceptionResponse_422"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login",
+        "description": "Login endpoint that validates API key/secret and returns JWT tokens.\nUsed by SDK to get access tokens.\n\nExample SDK request:\n```javascript\nconst response = await fetch(`${baseUrl}/auth/login`, {\n  method: \"POST\",\n  headers: { \"Content-Type\": \"application/json\" },\n  body: JSON.stringify({\n    api_key: apiKey,\n    api_secret: apiSecret,\n  }),\n});\n```\n\nArgs:\n    auth: AuthRequest containing api_key and api_secret\nReturns:\n    TokenResponse: Access token, refresh token, token type, and expiration time\nRaises:\n    HTTPException: If credentials are invalid",
+        "operationId": "login_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AuthRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully authenticated and received tokens",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TokenResponse" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/test": {
+      "post": {
+        "summary": "Test Protected Route",
+        "description": "Example protected route that requires authentication.\nSupports both Bearer token and demo key authentication.\n\nAuthentication can be provided in two ways:\n1. Bearer token in Authorization header:\n   Authorization: Bearer <token>\n\n2. Demo key in header (for testing only):\n   X-Demo-Key: demo_key\n\nArgs:\n    user_data: The decoded JWT payload or demo user info\nReturns:\n    dict: A message containing the user ID",
+        "operationId": "test_protected_route_auth_test_post",
+        "responses": {
+          "200": {
+            "description": "Successfully accessed protected route",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "example": { "message": "Image transformed for user user_123" }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/VFExceptionResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "HTTPBearer": [] }, { "APIKeyHeader": [] }]
+      }
+    },
+    "/generate/srcset": {
+      "get": {
+        "tags": ["Responsive"],
+        "summary": "Generate Srcset",
+        "description": "Generate a srcset string for responsive images.",
+        "operationId": "generate_srcset_generate_srcset_get",
+        "security": [{ "APIKeyHeader": [] }],
+        "parameters": [
+          {
+            "name": "src",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "VisionFly CDN url",
+              "title": "Src"
+            },
+            "description": "VisionFly CDN url"
+          },
+          {
+            "name": "w",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Comma-separated list of widths, e.g. 400,800,1200",
+              "default": "400,800,1200",
+              "title": "W"
+            },
+            "description": "Comma-separated list of widths, e.g. 400,800,1200"
+          },
+          {
+            "name": "f",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/VFImageFormat",
+              "description": "Output format",
+              "default": "auto"
+            },
+            "description": "Output format"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "description": "Quality (1-100)",
+              "default": 80,
+              "title": "Q"
+            },
+            "description": "Quality (1-100)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully generated srcset for responsive images",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VFGenerateSrcSetsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/upload": {
+      "post": {
+        "tags": ["Upload"],
+        "summary": "Upload Image",
+        "description": "Upload an image to VisionFly CDN.\nReturns metadata and CDN URL for the uploaded image.",
+        "operationId": "upload_image_upload_post",
+        "security": [{ "APIKeyHeader": [] }],
+        "parameters": [
+          {
+            "name": "public_id",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "title": "Public Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_image_upload_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VFUploadImageResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "tags": ["General"],
+        "summary": "Root",
+        "description": "API root - returns basic information about the API",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": ["General"],
+        "summary": "Health Check",
+        "description": "Health check endpoint for monitoring",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AuthRequest": {
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Api Key",
+            "description": "API key for authentication"
+          },
+          "api_secret": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Api Secret",
+            "description": "API secret for authentication"
+          }
+        },
+        "type": "object",
+        "required": ["api_key", "api_secret"],
+        "title": "AuthRequest",
+        "description": "Model for login request validation"
+      },
+      "Body_upload_image_upload_post": {
+        "properties": {
+          "file": { "type": "string", "format": "binary", "title": "File" }
+        },
+        "type": "object",
+        "required": ["file"],
+        "title": "Body_upload_image_upload_post"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": { "$ref": "#/components/schemas/ValidationError" },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "TokenResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token",
+            "description": "JWT access token for API authentication"
+          },
+          "refresh_token": {
+            "type": "string",
+            "title": "Refresh Token",
+            "description": "JWT refresh token for getting new access tokens"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type",
+            "description": "Type of token (always 'bearer')",
+            "default": "bearer"
+          },
+          "expires_in": {
+            "type": "integer",
+            "title": "Expires In",
+            "description": "Token expiration time in seconds",
+            "default": 3600
+          }
+        },
+        "type": "object",
+        "required": ["access_token", "refresh_token"],
+        "title": "TokenResponse",
+        "description": "Model for token response"
+      },
+      "VFErrorMsgs": {
+        "type": "string",
+        "enum": [
+          "Incorrect URL parameters",
+          "Invalid width parameter provided",
+          "Invalid url provided. Make sure url starts with https and is hosted on visionfly.ai",
+          "Not authenticated. Use either Bearer token or X-Demo-Key header for testing.",
+          "Token has expired.",
+          "Refresh token has expired.",
+          "Invalid token.",
+          "Invalid refresh token.",
+          "Invalid file type. Only images are allowed.",
+          "Invalid project for this user. Create a new project before uploading images to it.",
+          "Upload failed."
+        ],
+        "title": "VFErrorMsgs",
+        "description": "Enumeration of standard error messages used across the VisionFly API."
+      },
+      "VFExceptionResponse": {
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/VFExceptionType",
+            "description": "Type of VisionFly exception that occurred",
+            "default": "server_error"
+          },
+          "msg": {
+            "$ref": "#/components/schemas/VFErrorMsgs",
+            "description": "Human-readable error message",
+            "default": "Incorrect URL parameters"
+          },
+          "status_code": {
+            "type": "integer",
+            "maximum": 599.0,
+            "minimum": 400.0,
+            "title": "Status Code",
+            "description": "HTTP status code for the error",
+            "default": 500
+          }
+        },
+        "type": "object",
+        "title": "VFExceptionResponse",
+        "description": "Standardized exception response model for VisionFly API errors.\n\nThis model is used to provide consistent error responses when exceptions occur\nduring API operations."
+      },
+      "VFExceptionResponse_400": {
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/VFExceptionType",
+            "default": "request_error"
+          },
+          "msg": {
+            "$ref": "#/components/schemas/VFErrorMsgs",
+            "description": "Human-readable error message",
+            "default": "Incorrect URL parameters"
+          },
+          "status_code": {
+            "type": "integer",
+            "title": "Status Code",
+            "default": 400
+          }
+        },
+        "type": "object",
+        "title": "VFExceptionResponse_400",
+        "description": "Standardized exception response model for VisionFly API errors.\n\nThis model is used to provide consistent error responses when exceptions occur\nduring API operations."
+      },
+      "VFExceptionResponse_422": {
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/VFExceptionType",
+            "default": "request_error"
+          },
+          "msg": {
+            "$ref": "#/components/schemas/VFErrorMsgs",
+            "description": "Human-readable error message",
+            "default": "Incorrect URL parameters"
+          },
+          "status_code": {
+            "type": "string",
+            "title": "Status Code",
+            "default": 422
+          }
+        },
+        "type": "object",
+        "title": "VFExceptionResponse_422",
+        "description": "Standardized exception response model for VisionFly API errors.\n\nThis model is used to provide consistent error responses when exceptions occur\nduring API operations."
+      },
+      "VFExceptionType": {
+        "type": "string",
+        "enum": [
+          "image_processing_error",
+          "api_key_error",
+          "server_error",
+          "request_error",
+          "unauthorized_error",
+          "token_expired_error",
+          "refresh_token_expired_error",
+          "invalid_token_error",
+          "invalid_refresh_token_error",
+          "invalid_image_type_error",
+          "project_not_found_error"
+        ],
+        "title": "VFExceptionType",
+        "description": "Enumeration of different types of exceptions that can occur in the VisionFly API."
+      },
+      "VFGenerateSrcSetsResponse": {
+        "properties": {
+          "srcset": {
+            "type": "string",
+            "title": "Srcset",
+            "description": "Comma-separated list of image URLs with their respective widths",
+            "default": "",
+            "examples": [
+              "https://cdn.visionfly.ai/images/image_400.webp 400w, https://cdn.visionfly.ai/images/image_800.webp 800w"
+            ]
+          },
+          "sizes": {
+            "type": "string",
+            "title": "Sizes",
+            "description": "Sizes attribute for responsive images",
+            "default": "",
+            "examples": ["(max-width: 1200px) 100vw, 1200px"]
+          },
+          "default": {
+            "type": "string",
+            "maxLength": 2083,
+            "minLength": 1,
+            "format": "uri",
+            "title": "Default",
+            "description": "Default image URL to use when srcset is not supported",
+            "default": "",
+            "examples": ["https://cdn.visionfly.ai/images/image_800.webp"]
+          }
+        },
+        "type": "object",
+        "title": "VFGenerateSrcSetsResponse",
+        "description": "Response model for generating responsive image source sets.\n\nContains the srcset string, sizes attribute, and default image URL\nfor responsive image implementation.",
+        "examples": [
+          {
+            "default": "https://cdn.visionfly.ai/images/image_800.webp",
+            "sizes": "(max-width: 1200px) 100vw, 1200px",
+            "srcset": "https://cdn.visionfly.ai/images/image_400.webp 400w, https://cdn.visionfly.ai/images/image_800.webp 800w, https://cdn.visionfly.ai/images/image_1200.webp 1200w"
+          }
+        ]
+      },
+      "VFImageFormat": {
+        "type": "string",
+        "enum": ["auto", "webp", "avif", "jpeg", "jpg", "png"],
+        "title": "VFImageFormat",
+        "description": "Supported image formats for VisionFly image processing operations."
+      },
+      "VFTransformResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success",
+            "description": "Indicates whether the transformation was successful",
+            "default": false
+          },
+          "error": {
+            "type": "string",
+            "title": "Error",
+            "description": "Error message if the transformation failed",
+            "default": "",
+            "examples": ["Invalid input image", "Unsupported format"]
+          },
+          "public_url": {
+            "type": "string",
+            "maxLength": 2083,
+            "minLength": 1,
+            "format": "uri",
+            "title": "Public Url",
+            "description": "Public URL of the transformed image",
+            "default": "https://cdn.visionfly.ai",
+            "examples": [
+              "https://cdn.visionfly.ai/images/transformed_image.webp"
+            ]
+          },
+          "size": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Size",
+            "description": "Size of the transformed image in bytes",
+            "default": 0.0,
+            "examples": [302.5]
+          },
+          "content_type": {
+            "type": "string",
+            "title": "Content Type",
+            "description": "MIME type of the transformed image",
+            "default": "image/webp",
+            "examples": ["image/webp", "image/jpeg"]
+          }
+        },
+        "type": "object",
+        "title": "VFTransformResponse",
+        "description": "Response model for image transformation operations.\n\nContains information about the success/failure of the transformation\nand details about the transformed image.",
+        "examples": [
+          {
+            "content_type": "image/webp",
+            "error": "",
+            "public_url": "https://cdn.visionfly.ai/images/transformed_image.webp",
+            "size": 302.5,
+            "success": true
+          }
+        ]
+      },
+      "VFUploadImageResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success",
+            "description": "Indicates whether the upload was successful",
+            "default": false
+          },
+          "error": {
+            "type": "string",
+            "title": "Error",
+            "description": "Error message if the upload failed",
+            "default": "",
+            "examples": ["Invalid input image", "Unsupported format"]
+          },
+          "public_url": {
+            "type": "string",
+            "maxLength": 2083,
+            "minLength": 1,
+            "format": "uri",
+            "title": "Public Url",
+            "description": "Public URL of the uploaded image",
+            "default": "https://cdn.visionfly.ai",
+            "examples": ["https://cdn.visionfly.ai/images/uploaded_image.webp"]
+          },
+          "size": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Size",
+            "description": "Size of the uploaded image in bytes",
+            "default": 0.0,
+            "examples": [302.5]
+          },
+          "content_type": {
+            "type": "string",
+            "title": "Content Type",
+            "description": "MIME type of the uploaded image",
+            "default": "image/webp",
+            "examples": ["image/webp", "image/jpeg"]
+          }
+        },
+        "type": "object",
+        "title": "VFUploadImageResponse",
+        "description": "Response model for image upload.\n\nContains information about the success/failure of the upload\nand details about the uploaded image.",
+        "examples": [
+          {
+            "content_type": "image/webp",
+            "error": "",
+            "public_url": "https://cdn.visionfly.ai/images/uploaded_image.webp",
+            "size": 302.5,
+            "success": true
+          }
+        ]
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }] },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": { "type": "string", "title": "Message" },
+          "type": { "type": "string", "title": "Error Type" }
+        },
+        "type": "object",
+        "required": ["loc", "msg", "type"],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": { "type": "http", "scheme": "bearer" },
+      "APIKeyHeader": { "type": "apiKey", "in": "header", "name": "X-API-KEY" }
+    }
+  }
+}

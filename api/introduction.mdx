@@ -1,0 +1,82 @@
+---
+title: Introduction
+description: Welcome to VisionFly API Documentation
+---
+
+# VisionFly API Documentation
+
+Welcome to the VisionFly API documentation. VisionFly provides powerful image optimization and transformation capabilities through a simple REST API.
+
+## Quick Start
+
+```bash
+# Transform an image
+curl -X GET "https://api.visionfly.ai/transform?src=https://cdn.visionfly.ai/<user_id>/images/example.jpg&w=800&h=600&q=90&f=webp"
+
+# Generate responsive images
+curl -X GET "https://api.visionfly.ai/generate/srcset?src=https://cdn.visionfly.ai/<user_id>/images/example.jpg&w=400,800,1200"
+```
+
+## Features
+
+- 🖼️ **Image Transformation**: Resize, crop, and optimize images
+- 🎨 **Image Enhancement**: Adjust brightness, contrast, saturation, and more
+- 📱 **Responsive Images**: Generate srcset for responsive web design
+- 🚀 **Performance**: Optimized for speed and efficiency
+- 🔒 **Security**: HTTPS-only endpoints and secure image processing
+
+## Authentication
+
+VisionFly API uses API keys for authentication. Include your API key in the request header:
+
+```bash
+curl -H "X-API-KEY:YOUR_API_KEY" https://api.visionfly.ai/...
+```
+
+## Base URL
+
+All API endpoints are relative to the base URL:
+
+```
+https://api.visionfly.ai
+```
+
+## Response Format
+
+All responses are returned in JSON format with the following structure:
+
+```json
+{
+  "success": true,
+  "data": { ... },
+  "error": null
+}
+```
+
+## Rate Limits
+
+- 100 requests per minute per API key
+- 1000 requests per hour per API key
+
+## Error Handling
+
+The API uses standard HTTP status codes and returns detailed error messages:
+
+```json
+{
+  "type": "request_error",
+  "msg": "Incorrect URL parameters",
+  "status_code": 400
+}
+```
+
+## SDK Support
+
+VisionFly provides official SDKs for popular programming languages:
+
+- [JavaScript SDK](/sdk/javascript)
+
+## Getting Help
+
+- [API Reference](/api)
+- [Support](https://support.visionfly.ai)
