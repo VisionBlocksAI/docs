@@ -24,18 +24,18 @@
       {
         "group": "API Reference",
         "pages": [
-          "api/introduction",
+          "api-reference/introduction",
           {
             "group": "Upload",
-            "pages": ["/api/upload"]
+            "pages": ["/api-reference/upload"]
           },
           {
             "group": "Transform",
-            "pages": ["/api/transform"]
+            "pages": ["/api-reference/transform"]
           },
           {
             "group": "Responsive",
-            "pages": ["/api/generate-srcset"]
+            "pages": ["/api-reference/generate-srcset"]
           }
         ]
       },
@@ -67,6 +67,10 @@
   },
 
   "api": {
+    "spec": {
+      "type": "openapi",
+      "path": "/api/openapi.json"
+    },
     "mdx": {
       "server": "https://api.visionfly.ai",
       "auth": {
